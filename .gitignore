@@ -1,0 +1,36 @@
+**/.DS_Store
+
+# Project Specific
+temp/
+datasets/
+
+# Scala Specific
+*.class
+*.log
+
+# SBT Specific
+.cache
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+**/src/main/native/lib/**/*
+**/src/main/generated/**/*
+
+# IntelliJ Specific
+**/.idea/**/*
+
+# CLion Specific
+**/cmake-build-debug/**/*
+
+# VS Code Specific
+**/.vscode/**/*
+
+# ScalaJS Specific
+package-lock.json
+node_modules/
