@@ -15,6 +15,8 @@
 
 package org.platanios.d3.selection
 
+import org.platanios.d3.D3Function
+
 import org.scalajs.dom
 
 import scala.scalajs.js
@@ -22,10 +24,10 @@ import scala.scalajs.js
 /**
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait TransitionLike[E <: dom.EventTarget, Datum] extends js.Object {
-  def selection(): Selection[E, Datum, dom.Element, js.Any] = js.native
-  def on(`type`: String, listener: Null): TransitionLike[E, Datum] = js.native
-  def on[T: D3VOrFn[Unit]#CB](`type`: String, listener: T): TransitionLike[E, Datum] = js.native
-  def tween(name: String, tweenFn: Null): TransitionLike[E, Datum] = js.native
-  def tween[T: D3VOrFn[js.Function1[Double, Unit]]#CB](name: String, tweenFn: T): TransitionLike[E, Datum] = js.native
+@js.native trait TransitionLike[E <: dom.EventTarget, D] extends js.Object {
+  def selection(): Selection[E, D, dom.Element, js.Any] = js.native
+  def on(`type`: String, listener: Null): TransitionLike[E, D] = js.native
+  def on(`type`: String, listener: D3Function[E, D, Unit]): TransitionLike[E, D] = js.native
+  def tween(name: String, tweenFn: Null): TransitionLike[E, D] = js.native
+  def tween(name: String, tweenFn: D3Function[E, D, js.Function1[Double, Unit]]): TransitionLike[E, D] = js.native
 }

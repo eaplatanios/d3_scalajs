@@ -15,20 +15,16 @@
 
 package org.platanios.d3.selection
 
+import org.platanios.d3.{D3AttrValue, D3Function}
+
 import org.scalajs.dom
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.|
 
 /**
   * @author Emmanouil Antonios Platanios
   */
-@JSImport("d3-transition", JSImport.Namespace)
-@js.native object Transition extends js.Object {
-
-}
-
 @js.native trait Transition[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] extends js.Object {
   def select[DescElement <: dom.EventTarget](selector: String): Transition[DescElement, D, PE, PD] = js.native
 //  def select[DescElement <: dom.EventTarget](selector: ValueFn[E, D, DescElement]): Transition[DescElement, D, PE, PD] = js.native
@@ -37,7 +33,7 @@ import scala.scalajs.js.|
   def selection(): Selection[E, D, PE, PD] = js.native
   def transition(): Transition[E, D, PE, PD] = js.native
   def attr(name: String): String = js.native
-  def attr[T: D3AttrValueOrFn](name: String, value: T): this.type = js.native
+  def attr[T](name: String, value: D3Function[E, D, T])(implicit ev: T => D3AttrValue): this.type = js.native
   def attrTween(name: String, factory: Null): this.type = js.native
 //  def attrTween(name: String, factory: ValueFn[E, D, js.Function1[Double, String]]): this.type = js.native
   def style(name: String, value: Null): this.type = js.native
@@ -72,7 +68,7 @@ import scala.scalajs.js.|
   // def delay(milliseconds: ValueFn[E, D, Double]): this.type = js.native
   def duration(): Double = js.native
   def duration(milliseconds: Double): this.type = js.native
-  def duration[T: D3VOrFn[Double]#CB](milliseconds: T): this.type = js.native
+  def duration(milliseconds: D3Function[E, D, Double]): this.type = js.native
   def ease(): js.Function1[Double, Double] = js.native
   def ease(easingFn: js.Function1[Double, Double]): this.type = js.native
 }

@@ -15,7 +15,8 @@
 
 package org.platanios.d3.zoom
 
-import org.platanios.d3.selection.{D3VOrFn, Selection, TransitionLike}
+import org.platanios.d3.D3Function
+import org.platanios.d3.selection.{Selection, TransitionLike}
 
 import org.scalajs.dom
 
@@ -24,41 +25,53 @@ import scala.scalajs.js
 /**
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait ZoomBehavior[E <: dom.Element, Datum] extends js.Function {
-  def apply(selection: Selection[E, Datum, dom.Element, js.Any], args: js.Any*): Unit = js.native
-  def transform[T: D3VOrFn[ZoomTransform]#CB](selection: Selection[E, Datum, dom.Element, js.Any], transform: T): Unit = js.native
-  def transform[T: D3VOrFn[ZoomTransform]#CB](transition: TransitionLike[E, Datum], transform: T): Unit = js.native
-  def translateBy[Tx: D3VOrFn[Double]#CB, Ty: D3VOrFn[Double]#CB](selection: Selection[E, Datum, dom.Element, js.Any], x: Tx, y: Ty): Unit = js.native
-  def translateBy[Tx: D3VOrFn[Double]#CB, Ty: D3VOrFn[Double]#CB](transition: TransitionLike[E, Datum], x: Tx, y: Ty): Unit = js.native
-  def translateTo[Tx: D3VOrFn[Double]#CB, Ty: D3VOrFn[Double]#CB](selection: Selection[E, Datum, dom.Element, js.Any], x: Tx, y: Ty): Unit = js.native
-  def translateTo[Tx: D3VOrFn[Double]#CB, Ty: D3VOrFn[Double]#CB](transition: TransitionLike[E, Datum], x: Tx, y: Ty): Unit = js.native
-  def scaleBy[T: D3VOrFn[Double]#CB](selection: Selection[E, Datum, dom.Element, js.Any], k: T): Unit = js.native
-  def scaleBy[T: D3VOrFn[Double]#CB](transition: TransitionLike[E, Datum], k: T): Unit = js.native
-  def scaleTo[T: D3VOrFn[Double]#CB](selection: Selection[E, Datum, dom.Element, js.Any], k: T): Unit = js.native
-  def scaleTo[T: D3VOrFn[Double]#CB](transition: TransitionLike[E, Datum], k: T): Unit = js.native
+@js.native trait ZoomBehavior[E <: dom.Element, D] extends js.Function {
+  def apply(selection: Selection[E, D, dom.Element, js.Any], args: js.Any*): Unit = js.native
+  def transform(selection: Selection[E, D, dom.Element, js.Any], transform: D3Function[E, D, ZoomTransform]): Unit = js.native
+  def transform(transition: TransitionLike[E, D], transform: D3Function[E, D, ZoomTransform]): Unit = js.native
+
+  def translateBy(selection: Selection[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+  def translateBy(transition: TransitionLike[E, D], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+
+  def translateTo(selection: Selection[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+  def translateTo(transition: TransitionLike[E, D], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+
+  def scaleBy(selection: Selection[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
+  def scaleBy(transition: TransitionLike[E, D], k: D3Function[E, D, Double]): Unit = js.native
+
+  def scaleTo(selection: Selection[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
+  def scaleTo(transition: TransitionLike[E, D], k: D3Function[E, D, Double]): Unit = js.native
+
   def constrain(): js.Function3[ZoomTransform, js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], ZoomTransform] = js.native
   def constrain(constraint: js.Function3[ZoomTransform, js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], ZoomTransform]): this.type = js.native
-  def filter[T: D3VOrFn[Boolean]#CB](): T = js.native
-  def filter[T: D3VOrFn[Boolean]#CB](filterFn: T): this.type = js.native
-  def touchable[T: D3VOrFn[Boolean]#CB](): T = js.native
-  def touchable[T: D3VOrFn[Boolean]#CB](touchable: T): this.type = js.native
-  def wheelDelta[T: D3VOrFn[Double]#CB](): T = js.native
-  def wheelDelta[T: D3VOrFn[Double]#CB](delta: T): this.type = js.native
-  def extent[T: D3VOrFn[js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]]]#CB](): T = js.native
-  def extent(extent: js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]]): this.type = js.native
-  def extent[T: D3VOrFn[js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]]]#CB](extent: T): this.type = js.native
+
+  def filter(): D3Function[E, D, Boolean] = js.native
+  def filter(filterFn: D3Function[E, D, Boolean]): this.type = js.native
+
+  def touchable(): D3Function[E, D, Boolean] = js.native
+  def touchable(touchable: D3Function[E, D, Boolean]): this.type = js.native
+
+  def wheelDelta(): D3Function[E, D, Double] = js.native
+  def wheelDelta(delta: D3Function[E, D, Double]): this.type = js.native
+
+  def extent(): D3Function[E, D, js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]]] = js.native
+  def extent(extent: D3Function[E, D, js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]]]): this.type = js.native
+
   def scaleExtent(): js.Tuple2[Double, Double] = js.native
   def scaleExtent(extent: js.Tuple2[Double, Double]): this.type = js.native
+
   def translateExtent(): js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]] = js.native
   def translateExtent(extent: js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]]): this.type = js.native
+
   def clickDistance(): Double = js.native
   def clickDistance(distance: Double): this.type = js.native
+
   def duration(): Double = js.native
   def duration(duration: Double): this.type = js.native
+
   def interpolate(): (ZoomView, ZoomView) => (Double => ZoomView) = js.native
   def interpolate(interpolatorFactory: (ZoomView, ZoomView) => (Double => ZoomView)): this.type = js.native
 
-  def on[T: D3VOrFn[Unit]#CB](typenames: String): T = js.native
-  def on[T: D3VOrFn[Unit]#CB](typenames: String, listener: T): this.type = js.native
-  def on[T: D3VOrFn[Unit]#CB](typenames: String, listener: Null): this.type = js.native
+  def on(typenames: String): D3Function[E, D, Unit] = js.native
+  def on(typenames: String, listener: D3Function[E, D, Unit]): this.type = js.native
 }

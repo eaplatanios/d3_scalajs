@@ -15,11 +15,13 @@
 
 package org.platanios
 
-import scalajs.js
-import scala.scalajs.js.annotation.JSBracketAccess
 import org.scalajs.dom
 
-package object d3 {
+import scalajs.js
+import scala.scalajs.js.annotation.JSBracketAccess
+import scala.scalajs.js.|
+
+package object d3 extends Implicits {
   /** Helper trait which covers argument types like NodeListOf[T] or HTMLCollectionOf[T]. */
   @js.native trait ArrayLike[T] extends js.Object {
     var length: Double = js.native
@@ -59,37 +61,29 @@ package object d3 {
 
   //endregion Handling Events
 
-  type Index = Int
+  type Index = js.UndefOr[Int]
   type Group = js.UndefOr[Int]
 
-  type D3Function0[R] = js.Function0[R]
-  type D3Function1[D, R] = js.Function1[D, R]
-  type D3Function2[D, R] = js.Function2[D, Index, R]
-  type D3Function3[D, R] = js.Function3[D, Index, Group, R]
+  //region Value/Function-valued Arguments
 
-  type D3ThisFunction0[N <: dom.EventTarget, R] = js.ThisFunction0[N, R]
-  type D3ThisFunction1[N <: dom.EventTarget, D, R] = js.ThisFunction1[N, D, R]
-  type D3ThisFunction2[N <: dom.EventTarget, D, R] = js.ThisFunction2[N, D, Index, R]
-  type D3ThisFunction3[N <: dom.EventTarget, D, R] = js.ThisFunction3[N, D, Index, Group, R]
+  type D3Function[-N <: dom.EventTarget, -D, +R] = js.ThisFunction3[N, D, Index, Group, R]
 
-  implicit def d3Fn0ToFn1[D, R](f: D3Function0[R]): D3Function1[D, R] = (_: D) => f()
-  implicit def d3Fn1ToFn2[D, R](f: D3Function1[D, R]): D3Function2[D, R] = (d: D, _: Index) => f(d)
-  implicit def d3Fn2ToFn3[D, R](f: D3Function2[D, R]): D3Function3[D, R] = (d: D, i: Index, _: Group) => f(d, i)
+  sealed trait D3Value extends Any
 
-  implicit def d3Fn0ToThisFn0[N <: dom.EventTarget, R](f: D3Function0[R]): D3ThisFunction0[N, R] = (_: N) => f()
-  implicit def d3Fn1ToThisFn1[N <: dom.EventTarget, D, R](f: D3Function1[D, R]): D3ThisFunction1[N, D, R] = (_: N, d: D) => f(d)
-  implicit def d3Fn2ToThisFn2[N <: dom.EventTarget, D, R](f: D3Function2[D, R]): D3ThisFunction2[N, D, R] = (_: N, d: D, i: Index) => f(d, i)
-  implicit def d3Fn2ToThisFn3[N <: dom.EventTarget, D, R](f: D3Function3[D, R]): D3ThisFunction3[N, D, R] = (_: N, d: D, i: Index, g: Group) => f(d, i, g)
+  private[d3] class NullD3Value(val value: Null) extends AnyVal with D3Value
+  private[d3] class BooleanD3Value(val value: Boolean) extends AnyVal with D3Value
+  private[d3] class IntD3Value(val value: Int) extends AnyVal with D3Value
+  private[d3] class FloatD3Value(val value: Float) extends AnyVal with D3Value
+  private[d3] class DoubleD3Value(val value: Double) extends AnyVal with D3Value
+  private[d3] class StringD3Value(val value: String) extends AnyVal with D3Value
 
-  def f[R](f: Function0[R]): D3Function0[R] = f
-  def f[D, R](f: Function1[D, R]): D3Function1[D, R] = f
-  def f[D, R](f: Function2[D, Index, R]): D3Function2[D, R] = f
-  def f[D, R](f: Function3[D, Index, Group, R]): D3Function3[D, R] = f
+  type D3AttrValue = D3Value
+  type D3PropertyValue = D3Value
+  type D3TextValue = D3Value
 
-  //  def f[C, R](f: Function1[C, R]): D3ThisFunction0[C, R] = f
-  //  def f[C, D, R](f: Function2[C, D, R]): D3ThisFunction1[C, D, R] = f
-  //  def f[C, D, R](f: Function3[C, D, Index, R]): D3ThisFunction2[C, D, R] = f
-  //  def f[C, D, R](f: Function4[C, D, Index, Group, R]): D3ThisFunction3[C, D, R] = f
+  //endregion Value/Function-valued Arguments
+
+  // TODO: Re-organize the namespaces.
 
   implicit def d3toArray(d3: D3.type): array.Array.type = array.Array
   implicit def d3toAxis(d3: D3.type): axis.Axis.type = axis.Axis

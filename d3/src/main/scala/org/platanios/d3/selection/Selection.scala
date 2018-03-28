@@ -225,7 +225,7 @@ import scala.scalajs.js.|
     * @tparam DE Type of the descendant element to the be selected.
     * @return Selection.
     */
-  def select[DE <: dom.EventTarget, S: D3VOrFn[DE]#CB](selector: S): Selection[DE, D, PE, PD] = js.native
+  def select[DE <: dom.EventTarget](selector: D3Function[E, D, DE]): Selection[DE, D, PE, PD] = js.native
 
   /** Creates an empty selection. `Selection.selectAll` does not affect grouping; the elements in the returned selection
     * are grouped by their corresponding parent node in this selection, and the group at the current index will be
@@ -278,13 +278,13 @@ import scala.scalajs.js.|
     * @return Selection.
     */
   // TODO: !!! May need to change to a subtype relationship.
-  def selectAll[DE <: dom.EventTarget, DED, S: D3VOrFn[js.Array[DE] | ArrayLike[DE]]#CB](
-      selector: S
+  def selectAll[DE <: dom.EventTarget, DED](
+      selector: D3Function[E, D, js.Array[DE] | ArrayLike[DE]]
   ): Selection[DE, DED, E, D] = js.native
 
   // TODO: !!!
   def filter(selector: String): Selection[E, D, PE, PD] = js.native
-  def filter[T: D3VOrFn[Boolean]#CB](selector: T): Selection[E, D, PE, PD] = js.native
+  def filter(selector: D3Function[E, D, Boolean]): Selection[E, D, PE, PD] = js.native
 
   def merge[ME <: E, MD <: D, MPE <: PE, MPD <: PD](
       other: Selection[ME, MD, MPE, MPD]
@@ -295,51 +295,46 @@ import scala.scalajs.js.|
   //region Modifying Elements
 
   def attr(name: String): String = js.native
-  def attr[T: D3AttrValueOrFn](name: String, value: T): this.type = js.native
+  def attr[T](name: String, value: D3Function[E, D, T])(implicit ev: T => D3AttrValue): this.type = js.native
 
   def classed(names: String): Boolean = js.native
-  def classed[T: D3VOrFn[Boolean]#CB](names: String, value: T): this.type = js.native
+  def classed(names: String, value: D3Function[E, D, Boolean]): this.type = js.native
 
   def style(name: String): String = js.native
-  def style[T: D3AttrValueOrFn](name: String, value: T, priority: String = ""): this.type = js.native
+  def style[T](
+      name: String,
+      value: D3Function[E, D, T], priority: String = ""
+  )(implicit ev: T => D3AttrValue): this.type = js.native
 
   def property(name: String): js.Dynamic = js.native
-  def property[T: D3PropertyOrFn](name: String, value: T): this.type = js.native
+  def property[T](name: String, value: D3Function[E, D, T])(implicit ev: T => D3PropertyValue): this.type = js.native
 
-  def property[T](name: Local[T]): T | Unit = js.native
-
-  def property[T, TOrFn: D3VOrFn[T]#CB](name: Local[T], value: TOrFn): this.type = js.native
+  def property[T](name: Local[T]): T | Null = js.native
+  def property[T](name: Local[T], value: D3Function[E, D, T]): this.type = js.native
 
   def text(): String = js.native
-  def text[T: D3TextOrFn](value: T): this.type = js.native
+  def text[T](value: D3Function[E, D, T])(implicit ev: T => D3TextValue): this.type = js.native
 
   def html(): String = js.native
-  def html[T: D3TextOrFn](value: T): this.type = js.native
+  def html[T](value: D3Function[E, D, T])(implicit ev: T => D3TextValue): this.type = js.native
 
   def append(value: String): Selection[E, D, PE, PD] = js.native
-
-  def append[ChildE <: dom.EventTarget, ChildEOrFn: D3VOrFn[ChildE]#CB](
-      value: ChildEOrFn
-  ): Selection[ChildE, D, PE, PD] = js.native
+  def append[ChildE <: dom.EventTarget](value: D3Function[E, D, ChildE]): Selection[ChildE, D, PE, PD] = js.native
 
   def insert(value: String): Selection[E, D, PE, PD] = js.native
-
   def insert(value: String, before: String): Selection[E, D, PE, PD] = js.native
+  def insert[ChildE <: dom.EventTarget](value: D3Function[E, D, ChildE]): Selection[ChildE, D, PE, PD] = js.native
 
-  def insert[ChildE <: dom.EventTarget, ChildEOrFn: D3VOrFn[ChildE]#CB](
-      value: ChildEOrFn
-  ): Selection[ChildE, D, PE, PD] = js.native
+  def insert(value: String, before: D3Function[E, D, E]): Selection[E, D, PE, PD] = js.native
 
-  def insert[EOrFn: D3VOrFn[E]#CB](value: String, before: EOrFn): Selection[E, D, PE, PD] = js.native
-
-  def insert[ChildE <: dom.EventTarget, ChildEOrFn: D3VOrFn[ChildE]#CB](
-      value: ChildEOrFn,
+  def insert[ChildE <: dom.EventTarget](
+      value: D3Function[E, D, ChildE],
       before: String
   ): Selection[ChildE, D, PE, PD] = js.native
 
-  def insert[ChildE <: dom.EventTarget, ChildEOrFn: D3VOrFn[ChildE]#CB, EOrFn: D3VOrFn[E]#CB](
-      value: ChildEOrFn,
-      before: EOrFn
+  def insert[ChildE <: dom.EventTarget](
+      value: D3Function[E, D, ChildE],
+      before: D3Function[E, D, E]
   ): Selection[ChildE, D, PE, PD] = js.native
 
   def remove(): this.type = js.native
@@ -395,19 +390,14 @@ import scala.scalajs.js.|
     * @param  value Value to set the elements' bound data to.
     * @return Selection after setting the elements' bound data.
     */
-  def datum[ND, NDOrFn: D3VOrFn[ND]#CB](value: NDOrFn): Selection[E, ND, PE, PD] = js.native
+  def datum[ND](value: D3Function[E, D, ND]): Selection[E, ND, PE, PD] = js.native
 
   def data(): js.Array[D] = js.native
 
-  def data[ND](data: js.Array[ND]): Selection[E, ND, PE, PD] = js.native
-
-  def data[ND, KeyOrFn: D3VOrFn[String]#CB](data: js.Array[ND], key: KeyOrFn): Selection[E, ND, PE, PD] = js.native
-
-  def data[ND](data: D3ThisFunction1[E, D, js.Array[ND]]): Selection[E, ND, PE, PD] = js.native
-
-  // def data[ND, NDOrFn: D3VOrFn[js.Array[ND]]#CB](data: NDOrFn): Selection[E, ND, PE, PD] = js.native
-
-  // def data[ND, NDOrFn: D3VOrFn[js.Array[ND]]#CB, KeyOrFn: D3VOrFn[String]#CB](data: NDOrFn, key: KeyOrFn): Selection[E, ND, PE, PD] = js.native
+  def data[ND](
+      data: D3Function[E, D, js.Array[ND]],
+      key: D3Function[E, ND, String] = null
+  ): Selection[E, ND, PE, PD] = js.native
 
   /** Returns the enter selection: placeholder nodes for each datum that had no corresponding DOM element in the
     * selection. Note that the enter selection is empty for selections not returned by `Selection.data()`. */
@@ -426,15 +416,11 @@ import scala.scalajs.js.|
 
   //region Handling Events
 
-  def on(domTypeNames: String): D3ThisFunction3[E, D, Unit] = js.native
-
-  def on(domTypeNames: String, listener: Null): this.type = js.native
-
-  def on[T: D3VOrFn[Unit]#CB](domTypeNames: String, listener: T, capture: Boolean = false): this.type = js.native
+  def on(domTypeNames: String): D3Function[E, D, Unit] = js.native
+  def on(domTypeNames: String, listener: D3Function[E, D, Unit], capture: Boolean = false): this.type = js.native
 
   def dispatch(value: String): this.type = js.native
-  def dispatch(value: String, parameters: CustomEventParameters): this.type = js.native
-  def dispatch[T: D3VOrFn[CustomEventParameters]#CB](value: String, parameters: T): this.type = js.native
+  def dispatch(value: String, parameters: D3Function[E, D, CustomEventParameters]): this.type = js.native
 
   //endregion Handling Events
 
@@ -450,7 +436,7 @@ import scala.scalajs.js.|
     *              (`nodes(i)`).
     * @return This selection.
     */
-  def each[F: D3VOrFn[Unit]#CB](func: F): this.type = js.native
+  def each(func: D3Function[E, D, Unit]): this.type = js.native
 
   /** Invokes the specified function exactly once for each element in this selection, passing in the selection element
     * along with any optional arguments. This is equivalent to invoking the function by hand but facilitates method

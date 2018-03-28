@@ -15,7 +15,7 @@
 
 package org.platanios.d3.drag
 
-import org.platanios.d3.selection.D3VOrFn
+import org.platanios.d3.D3Function
 
 import org.scalajs.dom
 
@@ -37,7 +37,7 @@ import scala.scalajs.js.|
   var active     : Double                = js.native
   var sourceEvent: js.Any                = js.native
 
-  def on[T: D3VOrFn[Unit]#CB](typenames: String): T = js.native
-  def on[T: D3VOrFn[Unit]#CB](typenames: String, listener: T): this.type = js.native
+  def on(typenames: String): D3Function[E, D, Unit] = js.native
+  def on(typenames: String, listener: D3Function[E, D, Unit]): this.type = js.native
   def on(typenames: String, listener: Null): this.type = js.native
 }

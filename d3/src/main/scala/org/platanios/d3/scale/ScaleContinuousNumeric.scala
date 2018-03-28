@@ -16,19 +16,18 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.|
 
 /**
   * @author Emmanouil Antonios Platanios
   */
 @js.native trait ScaleContinuousNumeric[Range, Output] extends Scale[Double, Range, Output] {
-  def invert(value: Double | js.Any): Double = js.native
-  def domain(domain: js.Array[Double | js.Any]): this.type = js.native
+  def invert(value: Double): Double = js.native
+  def domain(domain: js.Array[Double]): this.type = js.native
   def range(range: js.Array[Range]): this.type = js.native
-  def rangeRound(range: js.Array[Double | js.Any]): this.type = js.native
+  def rangeRound(range: js.Array[Double]): this.type = js.native
   def clamp(): Boolean = js.native
   def clamp(clamp: Boolean): this.type = js.native
   def ticks(count: Double = ???): js.Array[Double] = js.native
-  def tickFormat(count: Double = ???, specifier: String = ???): js.Function1[Double | js.Any, String] = js.native
+  def tickFormat(count: Double = ???, specifier: String = ???): js.Function1[Double, String] = js.native
   def nice(count: Double = ???): this.type = js.native
 }

@@ -15,8 +15,9 @@
 
 package org.platanios.d3.drag
 
-import org.platanios.d3.ContainerElement
-import org.platanios.d3.selection.{D3VOrFn, Selection}
+import org.platanios.d3.{ContainerElement, D3Function}
+import org.platanios.d3.selection.Selection
+
 import org.scalajs.dom
 
 import scala.scalajs.js
@@ -24,19 +25,20 @@ import scala.scalajs.js
 /**
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait DragBehavior[E <: dom.Element, Datum, Subject] extends js.Function {
-  def apply(selection: Selection[E, Datum, dom.Element, js.Any], args: js.Any*): Unit = js.native
-  def container[C: ContainerElement, T: D3VOrFn[C]#CB](): T = js.native
-  def container[C: ContainerElement, T: D3VOrFn[C]#CB](accessor: T): this.type = js.native
-  def filter[T: D3VOrFn[Boolean]#CB](): T = js.native
-  def filter[T: D3VOrFn[Boolean]#CB](filterFn: T): this.type = js.native
-  def touchable[T: D3VOrFn[Boolean]#CB](): T = js.native
-  def touchable[T: D3VOrFn[Boolean]#CB](touchable: T): this.type = js.native
-  def subject[T: D3VOrFn[Subject]#CB](): T = js.native
-  def subject[T: D3VOrFn[Subject]#CB](accessor: T): this.type = js.native
+@js.native trait DragBehavior[E <: dom.Element, D, Subject] extends js.Function {
+  def apply(selection: Selection[E, D, dom.Element, js.Any], args: js.Any*): Unit = js.native
+  def container[C: ContainerElement](): D3Function[E, D, C] = js.native
+  def container[C: ContainerElement](accessor: D3Function[E, D, C]): this.type = js.native
+  def filter(): D3Function[E, D, Boolean] = js.native
+  def filter(filterFn: D3Function[E, D, Boolean]): this.type = js.native
+  def touchable(): D3Function[E, D, Boolean] = js.native
+  def touchable(touchable: D3Function[E, D, Boolean]): this.type = js.native
+  def subject(): D3Function[E, D, Subject] = js.native
+  def subject(accessor: D3Function[E, D, Subject]): this.type = js.native
   def clickDistance(): Double = js.native
   def clickDistance(distance: Double): this.type = js.native
-  def on[T: D3VOrFn[Unit]#CB](typenames: String): T = js.native
-  def on[T: D3VOrFn[Unit]#CB](typenames: String, listener: T): this.type = js.native
+
+  def on(typenames: String): D3Function[E, D, Unit] = js.native
+  def on(typenames: String, listener: D3Function[E, D, Unit]): this.type = js.native
   def on(typenames: String, listener: Null): this.type = js.native
 }

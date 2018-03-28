@@ -47,10 +47,10 @@ object GeneralUpdatePattern1 {
       text.enter()
           .append("text")
           .attr("class", "enter")
-          .attr("x", f((_: String, i: Index) => i * 32.0))
+          .attr("x", (_: String, i: Index) => i.asInstanceOf[Int] * 32.0)
           .attr("dy", ".35em")
           .merge(text)
-          .text(f((d: String) => d))
+          .text((d: String) => d)
 
       // EXIT: Remove old elements as needed.
       text.exit().remove()

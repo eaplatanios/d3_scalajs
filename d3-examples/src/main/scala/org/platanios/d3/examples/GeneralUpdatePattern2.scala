@@ -37,7 +37,7 @@ object GeneralUpdatePattern2 {
 
     def update(data: js.Array[String]): Unit = {
       // DATA JOIN: Join new data with old elements, if any.
-      val text = g.selectAll("text").data(data, f((d: String) => d))
+      val text = g.selectAll("text").data(data, (d: String) => d)
 
       // UPDATE: Update old elements as needed.
       text.attr("class", "update")
@@ -48,9 +48,9 @@ object GeneralUpdatePattern2 {
           .append("text")
           .attr("class", "enter")
           .attr("dy", ".35em")
-          .text(f((d: String) => d))
+          .text((d: String) => d)
           .merge(text)
-          .attr("x", f((_: String, i: Index) => i * 32.0))
+          .attr("x", (_: String, i: Index) => i.asInstanceOf[Int] * 32.0)
 
       // EXIT: Remove old elements as needed.
       text.exit().remove()

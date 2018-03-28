@@ -81,7 +81,7 @@ object PopulationPyramid {
           .attr("transform", "translate(" + width + ",0)")
           .call((d: Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => yAxis(d))
           .selectAll("g")
-          .filter(f((v: Double) => v == 0.0))
+          .filter((v: Double) => v == 0.0)
           .classed("zero", true)
 
       // Add labeled rects for each birthyear (so that no enter or exit is required).
@@ -89,10 +89,10 @@ object PopulationPyramid {
           .data(D3.range(year0 - age1, year1 + 1, 5))
           .enter().append("g")
           .attr("class", "birthyear")
-          .attr("transform", f((year: Double) => "translate(" + x(year) + ",0)"))
+          .attr("transform", (year: Double) => "translate(" + x(year) + ",0)")
 
       birthyear.selectAll("rect")
-          .data[Double]((_: dom.EventTarget, birthyear: Double) => {
+          .data((_: dom.EventTarget, birthyear: Double) => {
             groupedData
                 .getOrElse(year, Map.empty)
                 .getOrElse(birthyear, js.Array[Double](0, 0))
@@ -100,33 +100,33 @@ object PopulationPyramid {
           .enter().append("rect")
           .attr("x", -barWidth / 2)
           .attr("width", barWidth)
-          .attr("y", f((value: Double) => y(value)))
-          .attr("height", f((value: Double) => height - y(value)))
+          .attr("y", (value: Double) => y(value))
+          .attr("height", (value: Double) => height - y(value))
 
       // Add labels to show the birth year.
       birthyear.append("text")
           .attr("y", height - 4)
-          .text(f((birthyear: Double) => birthyear.toString))
+          .text((birthyear: Double) => birthyear.toString)
 
       // Add labels to show the age (separate and not animated).
       svg.selectAll(".age")
           .data(D3.range(0, age1 + 1, 5))
           .enter().append("text")
           .attr("class", "age")
-          .attr("x", f((age: Double) => x(year - age)))
+          .attr("x", (age: Double) => x(year - age))
           .attr("y", height + 4)
           .attr("dy", ".71em")
-          .text(f((age: Double) => age.toString))
+          .text((age: Double) => age.toString)
 
       // Allow the arrow keys to change the displayed year.
       dom.window.focus()
-      D3.select(dom.window).on("keydown", f(() => {
+      D3.select(dom.window).on("keydown", () => {
         D3.event.asInstanceOf[dom.KeyboardEvent].keyCode match {
           case 37 => year = Math.max(year0, year - 10)
           case 39 => year = Math.min(year1, year + 10)
         }
         update()
-      }))
+      })
 
       def update(): Unit = groupedData.get(year) match {
         case None => ()
@@ -138,15 +138,15 @@ object PopulationPyramid {
               .attr("transform", "translate(" + (x(year1) - x(year)) + ",0)")
 
           birthyear.selectAll("rect")
-              .data[Double]((_: dom.EventTarget, birthyear: Double) => {
+              .data((_: dom.EventTarget, birthyear: Double) => {
                 groupedData
                     .getOrElse(year, Map.empty)
                     .getOrElse(birthyear, js.Array[Double](0, 0))
               })
               .transition()
               .duration(750)
-              .attr("y", f((value: Double) => y(value)))
-              .attr("height", f((value: Double) => height - y(value)))
+              .attr("y", (value: Double) => y(value))
+              .attr("height", (value: Double) => height - y(value))
       }
     })
   }

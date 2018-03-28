@@ -16,18 +16,17 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.|
 
 /**
   * @author Emmanouil Antonios Platanios
   */
 @js.native trait ScaleLogarithmic[Range, Output] extends ScaleContinuousNumeric[Range, Output] {
   override def domain(): js.Array[Double] = js.native
-  override def domain(domain: js.Array[Double | js.Any]): this.type = js.native
+  override def domain(domain: js.Array[Double]): this.type = js.native
   def interpolate(): InterpolatorFactory[js.Any, js.Any] = js.native
   def interpolate[NO](interpolate: InterpolatorFactory[Range, NO]): ScaleLogarithmic[Range, NO] = js.native
   override def ticks(count: Double = ???): js.Array[Double] = js.native
-  override def tickFormat(count: Double = ???, specifier: String = ???): js.Function1[Double | js.Any, String] = js.native
+  override def tickFormat(count: Double = ???, specifier: String = ???): js.Function1[Double, String] = js.native
   def nice(): this.type = js.native
   def base(): Double = js.native
   def base(base: Double): this.type = js.native
