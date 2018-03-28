@@ -34,15 +34,8 @@ object PopulationPyramid {
     val height = 500 - margin("top") - margin("bottom")
     val barWidth = Math.floor(width / 19) - 1
 
-    val x = D3.scaleLinear().range(js.Array(barWidth / 2, width - barWidth / 2))
-    val y = D3.scaleLinear().range(js.Array(height, 0))
-
-    val yAxis = D3.axisRight(y)
-        .tickSize(-width)
-        .tickFormat((d, _) => Math.round(d / 1e6) + "M")
-
     // An SVG element with a bottom-right origin.
-    val svg = D3.select("body").append("svg")
+    val svg = d3.select("body").append("svg")
         .attr("width", width + margin("left") + margin("right"))
         .attr("height", height + margin("top") + margin("bottom"))
         .append("g")
@@ -57,7 +50,7 @@ object PopulationPyramid {
         .attr("dy", ".71em")
         .text("2000")
 
-    D3.csv("population.csv").then[Unit](parsed => {
+    d3.csv("population.csv").then[Unit](parsed => {
       // Compute the extent of the data set in people, age, and years.
       val people1 = parsed.map(d => d("people").toDouble).max
       val age1 = parsed.map(d => d("age").toDouble).max
@@ -65,9 +58,17 @@ object PopulationPyramid {
       val year1 = parsed.map(d => d("year").toDouble).max
       var year = year1
 
-      // Update the scale domains.
-      x.domain(js.Array(year1 - age1, year1))
-      y.domain(js.Array(0, people1))
+      val x = d3.scale.linear(
+        domain = Seq(year1 - age1, year1),
+        range = Seq(barWidth / 2, width - barWidth / 2))
+
+      val y = d3.scale.linear(
+        domain = Seq(0.0, people1),
+        range = Seq(height, 0.0))
+
+      val yAxis = d3.axisRight(y)
+          .tickSize(-width)
+          .tickFormat((d, _) => Math.round(d / 1e6) + "M")
 
       // Produce a map from year and birth year to male/female.
       val groupedData = parsed
@@ -86,7 +87,7 @@ object PopulationPyramid {
 
       // Add labeled rects for each birthyear (so that no enter or exit is required).
       val birthyear = birthyears.selectAll(".birthyear")
-          .data(D3.range(year0 - age1, year1 + 1, 5))
+          .data(d3.range(year0 - age1, year1 + 1, 5))
           .enter().append("g")
           .attr("class", "birthyear")
           .attr("transform", (year: Double) => "translate(" + x(year) + ",0)")
@@ -110,7 +111,7 @@ object PopulationPyramid {
 
       // Add labels to show the age (separate and not animated).
       svg.selectAll(".age")
-          .data(D3.range(0, age1 + 1, 5))
+          .data(d3.range(0, age1 + 1, 5))
           .enter().append("text")
           .attr("class", "age")
           .attr("x", (age: Double) => x(year - age))
@@ -120,8 +121,8 @@ object PopulationPyramid {
 
       // Allow the arrow keys to change the displayed year.
       dom.window.focus()
-      D3.select(dom.window).on("keydown", () => {
-        D3.event.asInstanceOf[dom.KeyboardEvent].keyCode match {
+      d3.select(dom.window).on("keydown", () => {
+        d3.event.asInstanceOf[dom.KeyboardEvent].keyCode match {
           case 37 => year = Math.max(year0, year - 10)
           case 39 => year = Math.min(year1, year + 10)
         }

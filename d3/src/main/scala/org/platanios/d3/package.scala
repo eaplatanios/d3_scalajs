@@ -19,7 +19,6 @@ import org.scalajs.dom
 
 import scalajs.js
 import scala.scalajs.js.annotation.JSBracketAccess
-import scala.scalajs.js.|
 
 package object d3 extends Implicits {
   /** Helper trait which covers argument types like NodeListOf[T] or HTMLCollectionOf[T]. */
@@ -85,25 +84,24 @@ package object d3 extends Implicits {
 
   // TODO: Re-organize the namespaces.
 
-  implicit def d3toArray(d3: D3.type): array.Array.type = array.Array
-  implicit def d3toAxis(d3: D3.type): axis.Axis.type = axis.Axis
-  implicit def d3toColor(d3: D3.type): color.Color.type = color.Color
-  implicit def d3toColorScheme(d3: D3.type): color.ColorScheme.type = color.ColorScheme
-  implicit def d3toDrag(d3: D3.type): drag.Drag.type = drag.Drag
-  implicit def d3toDSV(d3: D3.type): data.DSV.type = data.DSV
-  implicit def d3toFetch(d3: D3.type): data.Fetch.type = data.Fetch
-  implicit def d3toScale(d3: D3.type): scale.Scale.type = scale.Scale
-  implicit def d3toSelection(d3: D3.type): selection.Selection.type = selection.Selection
-  implicit def d3toTime(d3: D3.type): time.Time.type = time.Time
-  implicit def d3toTimer(d3: D3.type): time.Timer.type = time.Timer
-  implicit def d3toInterpolate(d3: D3.type): Interpolate.type = Interpolate
-  implicit def d3toLocal(d3: D3.type): Local.type = Local
-  implicit def d3toNamespaces(d3: D3.type): Namespaces.type = Namespaces
+  implicit def d3toArray(d3: org.platanios.d3.d3.type): array.Array.type = array.Array
+  implicit def d3toAxis(d3: org.platanios.d3.d3.type): axis.Axis.type = axis.Axis
+  implicit def d3toColor(d3: org.platanios.d3.d3.type): color.Color.type = color.Color
+  implicit def d3toColorScheme(d3: org.platanios.d3.d3.type): color.ColorScheme.type = color.ColorScheme
+  implicit def d3toDrag(d3: org.platanios.d3.d3.type): drag.Drag.type = drag.Drag
+  implicit def d3toDSV(d3: org.platanios.d3.d3.type): data.DSV.type = data.DSV
+  implicit def d3toFetch(d3: org.platanios.d3.d3.type): data.Fetch.type = data.Fetch
+  implicit def d3toSelection(d3: org.platanios.d3.d3.type): selection.Selection.type = selection.Selection
+  implicit def d3toTime(d3: org.platanios.d3.d3.type): time.Time.type = time.Time
+  implicit def d3toTimer(d3: org.platanios.d3.d3.type): time.Timer.type = time.Timer
+  implicit def d3toInterpolate(d3: org.platanios.d3.d3.type): Interpolate.type = Interpolate
+  implicit def d3toLocal(d3: org.platanios.d3.d3.type): Local.type = Local
+  implicit def d3toNamespaces(d3: org.platanios.d3.d3.type): Namespaces.type = Namespaces
 
-  implicit def d3toD3Force(d3: D3.type): D3Force.type = D3Force
-  implicit def d3toD3Polygon(d3: D3.type): D3Polygon.type = D3Polygon
-  implicit def d3toD3Shape(d3: D3.type): D3Shape.type = D3Shape
-  implicit def d3toD3QuadTree(d3: D3.type): D3QuadTree.type = D3QuadTree
+  implicit def d3toD3Force(d3: org.platanios.d3.d3.type): D3Force.type = D3Force
+  implicit def d3toD3Polygon(d3: org.platanios.d3.d3.type): D3Polygon.type = D3Polygon
+  implicit def d3toD3Shape(d3: org.platanios.d3.d3.type): D3Shape.type = D3Shape
+  implicit def d3toD3QuadTree(d3: org.platanios.d3.d3.type): D3QuadTree.type = D3QuadTree
   //  implicit def d3toD3Zoom(d3: D3.type): D3Zoom.type = D3Zoom
 
   //  implicit class SelectionExtensions[Datum](val s: Selection[Datum]) extends AnyVal {

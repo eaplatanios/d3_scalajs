@@ -1,0 +1,81 @@
+/* Copyright 2017-18, Emmanouil Antonios Platanios. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package org.platanios.d3.scale
+
+import scala.scalajs.js
+import scala.scalajs.js.annotation.JSName
+
+/** Quantile scales map a sampled input domain to a discrete range. The domain is considered continuous and thus the
+  * scale will accept any reasonable input value. However, the domain is specified as a discrete set of sample values.
+  * The number of values in (the cardinality of) the output range determines the number of quantiles that will be
+  * computed from the domain. To compute the quantiles, the domain is sorted, and treated as a
+  * [population of discrete values](https://en.wikipedia.org/wiki/Quantile#Quantiles_of_a_population).
+  * See [bl.ocks.org/8ca036b3505121279daf](http://bl.ocks.org/mbostock/8ca036b3505121279daf) for an example.
+  *
+  * @author Emmanouil Antonios Platanios
+  */
+@js.native trait Quantile[Range] extends Scale[Double, Range, Range] {
+  /** Sets the domain of this scale. */
+  private[scale] def domain(domain: js.Array[Double]): this.type = js.native
+
+  /** Sets the range of this scale. */
+  private[scale] def range(range: js.Array[Range]): this.type = js.native
+
+  /** Returns the quantile thresholds. If the range contains `n` discrete values, the returned array will contain
+    * `n - 1` thresholds. Values less than the first threshold are considered in the first quantile; values greater
+    * than or equal to the first threshold but less than the second threshold are in the second quantile, and so on.
+    * Internally, the thresholds array is used with bisect to find the output quantile associated with the given input
+    * value.
+    *
+    * @return Quantiles in this scale.
+    */
+  def quantiles(): js.Array[Double] = js.native
+
+  /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range: the inverse of
+    * quantize. This method is useful for interaction, say to determine the value in the domain that corresponds to the
+    * pixel location under the mouse.
+    *
+    * @param  value Value in the range to invert.
+    * @return Inverted value in the domain of this scale.
+    */
+  @JSName("invertExtent") def invert(value: Range): js.Tuple2[Double, Double] = js.native
+}
+
+object Quantile {
+  trait API {
+    def quantile(
+        domain: Seq[Double],
+        range: Seq[Range]
+    ): Quantile[Range] = Quantile(domain, range)
+  }
+
+  /** Constructs a new quantile scale.
+    *
+    * @param  domain Domain for the new scale. A copy of the input array is sorted and stored internally.
+    * @param  range  Range for the new scale. The number of values in (the cardinality, or length, of) the range array
+    *                determines the number of quantiles that are computed. For example, to compute quartiles, range must
+    *                be an array of four elements such as `[0, 1, 2, 3]`.
+    * @return New scale.
+    */
+  def apply[Range](
+      domain: Seq[Double],
+      range: Seq[Range]
+  ): Quantile[Range] = {
+    Scale.scaleQuantile[Range]()
+        .domain(js.Array(domain: _*))
+        .range(js.Array(range: _*))
+  }
+}

@@ -15,17 +15,19 @@
 
 package org.platanios.d3.scale
 
-import scala.scalajs.js
-import scala.scalajs.js.|
-
 /**
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait ScaleQuantize[Range] extends Scale[Double, Range, Range] {
-  def invertExtent(value: Range): js.Tuple2[Double, Double] = js.native
-  def domain(domain: js.Tuple2[Double | js.Any, Double | js.Any]): this.type = js.native
-  def range(range: js.Array[Range]): this.type = js.native
-  def ticks(count: Double = ???): js.Array[Double] = js.native
-  def tickFormat(count: Double = ???, specifier: String = ???): js.Function1[Double | js.Any, String] = js.native
-  def nice(count: Double = ???): this.type = js.native
-}
+trait API
+    extends Linear.API
+        with Power.API
+        with Logarithmic.API
+        with Identity.API
+        with Time.API
+        with Sequential.API
+        with Quantize.API
+        with Quantile.API
+        with Threshold.API
+        with Ordinal.API
+        with Band.API
+        with Point.API

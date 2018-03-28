@@ -13,18 +13,18 @@
  * the License.
  */
 
-package org.platanios.d3.scale
+package org.platanios.d3
 
-import scala.scalajs.js
-import scala.scalajs.js.|
+import scalajs.js
+import scalajs.js.annotation.JSImport
 
 /**
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait ScaleSequential[Output] extends Scale[Double, Double, Double] {
-  def domain(domain: js.Tuple2[Double | js.Any, Double | js.Any]): this.type = js.native
-  def clamp(): Boolean = js.native
-  def clamp(clamp: Boolean): this.type = js.native
-  def interpolator(): js.Function1[Double, Output] = js.native
-  def interpolator[NO](interpolator: js.Function1[Double, NO]): ScaleSequential[NO] = js.native
+@JSImport("d3", JSImport.Namespace)
+@js.native
+object d3 extends js.Object {
+  val version: String = js.native
+
+  object scale extends org.platanios.d3.scale.API
 }

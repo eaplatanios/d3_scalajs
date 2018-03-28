@@ -13,17 +13,15 @@
  * the License.
  */
 
-package org.platanios.d3.scale
+package org.platanios.d3
 
-import scala.scalajs.js
-import scala.scalajs.js.|
+import org.scalatest._
 
 /**
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait ScaleQuantile[Range] extends Scale[Double, Range, Range] {
-  def invertExtent(value: Range): js.Tuple2[Double, Double] = js.native
-  def domain(domain: js.Array[Double | js.Any | Null | Unit]): this.type = js.native
-  def range(range: js.Array[Range]): this.type = js.native
-  def quantiles(): js.Array[Double] = js.native
+class d3Suite extends FunSuite {
+  test("The D3 version string should be correct.") {
+    assert(d3.version === "5.0.0")
+  }
 }

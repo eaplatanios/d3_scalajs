@@ -27,26 +27,26 @@ class SelectionSuite extends FunSuite {
   dom.document.body.appendChild(element)
 
   test("'D3.select' should work for a single element.") {
-    val selection = D3.select("p")
+    val selection = d3.select("p")
     println(selection)
     val node = selection.node()
     assert(element === node)
   }
 
   test("'D3.selectAll' should work for a single element.") {
-    val selection = D3.selectAll("p")
+    val selection = d3.selectAll("p")
     val node = selection.node()
     assert(element === node)
   }
 
   test("'D3.Selection.select' should work for a single element.") {
-    val selection = D3.select("body").select("p")
+    val selection = d3.select("body").select("p")
     val node = selection.node()
     assert(element === node)
   }
 
   test("'D3.Selection.selectAll' should work for a single element.") {
-    val selection = D3.selectAll("body").selectAll("p")
+    val selection = d3.selectAll("body").selectAll("p")
     val node = selection.node()
     assert(element === node)
   }

@@ -30,7 +30,7 @@ object GeneralUpdatePattern2 {
 
     val width = 960
     val height = 500
-    val svg = D3.select("body").append("svg")
+    val svg = d3.select("body").append("svg")
     svg.attr("width", width)
     svg.attr("height", height)
     val g = svg.append("g").attr("transform", s"translate(32,${height / 2})")
@@ -60,6 +60,6 @@ object GeneralUpdatePattern2 {
     update(alphabet)
 
     // Grab a random sample of letters from the alphabet, in alphabetical order.
-    D3.interval(_ => update(D3.shuffle(alphabet).jsSlice(0, Math.floor(Math.random() * 26).toInt).sort()), 1500)
+    d3.interval(_ => update(d3.shuffle(alphabet).jsSlice(0, Math.floor(Math.random() * 26).toInt).sort()), 1500)
   }
 }

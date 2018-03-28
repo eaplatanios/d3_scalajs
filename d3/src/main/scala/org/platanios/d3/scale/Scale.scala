@@ -18,53 +18,55 @@ package org.platanios.d3.scale
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
-/**
+/** Scales are a convenient abstraction for a fundamental task in visualization: mapping a dimension of abstract data to
+  * a visual representation. Although most often used for position-encoding quantitative data, such as mapping a
+  * measurement in meters to a position in pixels for dots in a scatter plot, scales can represent virtually any visual
+  * encoding, such as diverging colors, stroke widths, or symbol size. Scales can also be used with virtually any type
+  * of data, such as named categorical data or discrete data that requires sensible breaks.
+  *
+  * For [continuous](https://github.com/d3/d3-scale#continuous-scales) quantitative data, you typically want a
+  * [linear scale](https://github.com/d3/d3-scale#linear-scales), or for time series data, a
+  * [time scale](https://github.com/d3/d3-scale#time-scales). If the distribution calls for it, consider transforming
+  * the data using a [power](https://github.com/d3/d3-scale#power-scales) or a
+  * [log](https://github.com/d3/d3-scale#log-scales) scale. A
+  * [quantize scale](https://github.com/d3/d3-scale#quantize-scales) may aid differentiation by rounding continuous data
+  * to a fixed set of discrete values; similarly, a [quantile scale](https://github.com/d3/d3-scale#quantile-scales)
+  * computes quantiles from a sample population, and a
+  * [threshold scale](https://github.com/d3/d3-scale#threshold-scales) allows you to specify arbitrary breaks in
+  * continuous data.
+  *
+  * Scales have no intrinsic visual representation. However, most scales can
+  * [generate](https://github.com/d3/d3-scale#continuous_ticks) and
+  * [format](https://github.com/d3/d3-scale#continuous_tickFormat) ticks for reference marks to aid in the construction
+  * of axes.
+  *
+  * For more details, refer to the [official D3 documentation](https://github.com/d3/d3-scale).
+  *
   * @author Emmanouil Antonios Platanios
   */
 @JSImport("d3-scale", JSImport.Namespace)
-@js.native object Scale extends js.Object {
-  // TODO: !!! Create constructors for scales that are strongly-typed (both domain and range).
-
-  def scaleLinear(): ScaleLinear[Double, Double] = js.native
-  // def scaleLinear[Output](): ScaleLinear[Output, Output] = js.native
-  // def scaleLinear[Range, Output](): ScaleLinear[Range, Output] = js.native
-  def scalePow(): ScalePower[Double, Double] = js.native
-  // def scalePow[Output](): ScalePower[Output, Output] = js.native
-  // def scalePow[Range, Output](): ScalePower[Range, Output] = js.native
-  def scaleSqrt(): ScalePower[Double, Double] = js.native
-  // def scaleSqrt[Output](): ScalePower[Output, Output] = js.native
-  // def scaleSqrt[Range, Output](): ScalePower[Range, Output] = js.native
-  def scaleLog(): ScaleLogarithmic[Double, Double] = js.native
-  // def scaleLog[Output](): ScaleLogarithmic[Output, Output] = js.native
-  // def scaleLog[Range, Output](): ScaleLogarithmic[Range, Output] = js.native
-  def scaleIdentity(): ScaleIdentity = js.native
-  def scaleTime(): ScaleTime[Double, Double] = js.native
-  // def scaleTime[Output](): ScaleTime[Output, Output] = js.native
-  // def scaleTime[Range, Output](): ScaleTime[Range, Output] = js.native
-  def scaleUtc(): ScaleTime[Double, Double] = js.native
-  // def scaleUtc[Output](): ScaleTime[Output, Output] = js.native
-  // def scaleUtc[Range, Output](): ScaleTime[Range, Output] = js.native
-  def scaleSequential[Output](interpolator: js.Function1[Double, Output]): ScaleSequential[Output] = js.native
-  def scaleQuantize(): ScaleQuantize[Double] = js.native
-  // def scaleQuantize[Range](): ScaleQuantize[Range] = js.native
-  def scaleQuantile(): ScaleQuantile[Double] = js.native
-  // def scaleQuantile[Range](): ScaleQuantile[Range] = js.native
-  def scaleThreshold(): ScaleThreshold[Double, Double] = js.native
-  // def scaleThreshold[Domain <: ScaleThresholdDomain, Range](): ScaleThreshold[Domain, Range] = js.native
-  def scaleOrdinal[Range](): ScaleOrdinal[String, Range] = js.native
-  def scaleOrdinal[Range](range: js.Array[Range]): ScaleOrdinal[String, Range] = js.native
-  // def scaleOrdinal[Domain, Range](): ScaleOrdinal[Domain, Range] = js.native
-  // def scaleOrdinal[Domain, Range](range: js.Array[Range]): ScaleOrdinal[Domain, Range] = js.native
-  def scaleBand(): ScaleBand[String] = js.native
-  // def scaleBand[Domain](): ScaleBand[Domain] = js.native
-  def scalePoint(): ScalePoint[String] = js.native
-  // def scalePoint[Domain](): ScalePoint[Domain] = js.native
+@js.native private[scale] object Scale extends js.Object {
+  private[scale] val scaleImplicit: js.Any = js.native
+  private[scale] def scaleLinear[Range, Output](): Linear[Range, Output] = js.native
+  private[scale] def scalePow[Range, Output](): Power[Range, Output] = js.native
+  private[scale] def scaleLog[Range, Output](): Logarithmic[Range, Output] = js.native
+  private[scale] def scaleIdentity(): Identity = js.native
+  private[scale] def scaleTime[Range, Output](): Time[Range, Output] = js.native
+  private[scale] def scaleUTC[Range, Output](): Time[Range, Output] = js.native
+  private[scale] def scaleSequential[Output](interpolator: js.Function1[Double, Output]): Sequential[Output] = js.native
+  private[scale] def scaleQuantize[Range](): Quantize[Range] = js.native
+  private[scale] def scaleQuantile[Range](): Quantile[Range] = js.native
+  private[scale] def scaleThreshold[Domain, Range](): Threshold[Domain, Range] = js.native
+  private[scale] def scaleOrdinal[Domain, Range](range: js.Array[Range]): Ordinal[Domain, Range] = js.native
+  private[scale] def scaleBand[Domain](): Band[Domain] = js.native
+  private[scale] def scalePoint[Domain](): Point[Domain] = js.native
 }
 
 trait Scale[Domain, Range, Output] extends js.Object {
   def apply(x: Domain): Output = js.native
   def domain(): js.Array[Domain] = js.native
   def range(): js.Array[Range] = js.native
+
+  /** Returns an exact copy of this scale. Changes to this scale will not affect the returned scale, and vice versa. */
   def copy(): this.type = js.native
-  def bandwidth(): Double = js.native
 }
