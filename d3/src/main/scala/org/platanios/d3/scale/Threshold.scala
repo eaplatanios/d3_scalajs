@@ -16,7 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.|
 
 /** Threshold scales are similar to quantize scales, except they allow you to map arbitrary subsets of the domain to
@@ -38,13 +38,9 @@ import scala.scalajs.js.|
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Threshold[Domain, Range] extends Scale[Domain, Range, Range] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[Domain]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Array[Range]): this.type = js.native
-
+class Threshold[Domain, Range] private[scale] (
+    override private[d3] val facade: Threshold.Facade[Domain, Range]
+) extends Scale[Domain, Range, Range, Threshold.Facade[Domain, Range]] {
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range, representing the
     * inverse mapping from range to domain. This method is useful for interaction, say to determine the value in the
     * domain that corresponds to the pixel location under the mouse. For example:
@@ -61,10 +57,27 @@ import scala.scalajs.js.|
     * @param  value Value in the range to invert.
     * @return Inverted value in the domain of this scale.
     */
-  @JSName("invertExtent") def invert(value: Range): js.Tuple2[Domain | Unit, Domain | Unit] = js.native
+  def invert(value: Range): js.Tuple2[Domain | Unit, Domain | Unit] = facade.invertExtent(value)
+
+  override protected def copy(facade: Threshold.Facade[Domain, Range]): Threshold[Domain, Range] = {
+    new Threshold(facade)
+  }
 }
 
 object Threshold {
+  @js.native private[scale] trait Facade[Domain, Range]
+      extends Scale.Facade[Domain, Range, Range, Facade[Domain, Range]] {
+    def domain(domain: js.Array[Domain]): this.type = js.native
+    def range(range: js.Array[Range]): this.type = js.native
+
+    def invertExtent(value: Range): js.Tuple2[Domain | Unit, Domain | Unit] = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleThreshold[Domain, Range](): Threshold.Facade[Domain, Range] = js.native
+  }
+
   trait API {
     def threshold[Domain, Range](
         domain: Seq[Domain] = Seq(0.5).asInstanceOf[Seq[Domain]],
@@ -91,8 +104,9 @@ object Threshold {
       domain: Seq[Domain] = Seq(0.5).asInstanceOf[Seq[Domain]],
       range: Seq[Range] = Seq(0, 1).asInstanceOf[Seq[Range]]
   ): Threshold[Domain, Range] = {
-    Scale.scaleThreshold[Domain, Range]()
+    val facade = Facade.scaleThreshold[Domain, Range]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
+    new Threshold(facade)
   }
 }

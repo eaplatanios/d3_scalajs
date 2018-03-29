@@ -15,7 +15,10 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.interpolate.InterpolatorFactory
+
 import scala.scalajs.js
+import scala.scalajs.js.annotation.JSImport
 
 /** Represents a continuous linear scale. Linear scales are a good default choice for continuous quantitative data
   * because they preserve proportional differences. Each range value `y` can be expressed as a function of the domain
@@ -23,12 +26,23 @@ import scala.scalajs.js
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Linear[Range, Output] extends ContinuousNumeric[Range, Output] {
-  /** Sets the interpolator of this scale. */
-  private[scale] def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Linear[Range, IO] = js.native
+class Linear[Range, Output] private[scale] (
+    override private[d3] val facade: Linear.Facade[Range, Output]
+) extends ContinuousNumeric[Range, Output, Linear.Facade[Range, Output]] {
+  override protected def copy(facade: Linear.Facade[Range, Output]): Linear[Range, Output] = new Linear(facade)
 }
 
 object Linear {
+  @js.native private[scale] trait Facade[Range, Output]
+      extends ContinuousNumeric.Facade[Range, Output, Facade[Range, Output]] {
+    def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Linear.Facade[Range, IO] = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleLinear[Range, Output](): Linear.Facade[Range, Output] = js.native
+  }
+
   trait API {
     def linear[Range](
         domain: Seq[Double] = Seq(0.0, 1.0),
@@ -97,15 +111,15 @@ object Linear {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Linear[Range, Range] = {
-    val scale = Scale.scaleLinear[Range, Range]()
+    val facade = Facade.scaleLinear[Range, Range]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Linear(facade)
   }
 
   /** Constructs a new linear scale.
@@ -178,16 +192,16 @@ object Linear {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Linear[Range, Output] = {
-    val scale = Scale.scaleLinear[Range, Output]()
+    val facade = Facade.scaleLinear[Range, Output]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .clamp(clamped)
         .interpolate(interpolator)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Linear(facade)
   }
 
   /** Constructs a new rounded linear scale. This is done by using the round interpolator, by default.
@@ -231,14 +245,14 @@ object Linear {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Linear[Double, Double] = {
-    val scale = Scale.scaleLinear[Double, Double]()
+    val facade = Facade.scaleLinear[Double, Double]()
         .domain(js.Array(domain: _*))
         .rangeRound(js.Array(range: _*))
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Linear(facade)
   }
 }

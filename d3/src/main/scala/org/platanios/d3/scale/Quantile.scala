@@ -16,7 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 
 /** Quantile scales map a sampled input domain to a discrete range. The domain is considered continuous and thus the
   * scale will accept any reasonable input value. However, the domain is specified as a discrete set of sample values.
@@ -27,13 +27,9 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Quantile[Range] extends Scale[Double, Range, Range] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[Double]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Array[Range]): this.type = js.native
-
+class Quantile[Range] private[scale] (
+    override private[d3] val facade: Quantile.Facade[Range]
+) extends Scale[Double, Range, Range, Quantile.Facade[Range]] {
   /** Returns the quantile thresholds. If the range contains `n` discrete values, the returned array will contain
     * `n - 1` thresholds. Values less than the first threshold are considered in the first quantile; values greater
     * than or equal to the first threshold but less than the second threshold are in the second quantile, and so on.
@@ -42,7 +38,7 @@ import scala.scalajs.js.annotation.JSName
     *
     * @return Quantiles in this scale.
     */
-  def quantiles(): js.Array[Double] = js.native
+  def quantiles(): js.Array[Double] = facade.quantiles()
 
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range: the inverse of
     * quantize. This method is useful for interaction, say to determine the value in the domain that corresponds to the
@@ -51,10 +47,28 @@ import scala.scalajs.js.annotation.JSName
     * @param  value Value in the range to invert.
     * @return Inverted value in the domain of this scale.
     */
-  @JSName("invertExtent") def invert(value: Range): js.Tuple2[Double, Double] = js.native
+  def invert(value: Range): js.Tuple2[Double, Double] = facade.invertExtent(value)
+
+  override protected def copy(facade: Quantile.Facade[Range]): Quantile[Range] = {
+    new Quantile(facade)
+  }
 }
 
 object Quantile {
+  @js.native private[scale] trait Facade[Range]
+      extends Scale.Facade[Double, Range, Range, Facade[Range]] {
+    def domain(domain: js.Array[Double]): this.type = js.native
+    def range(range: js.Array[Range]): this.type = js.native
+
+    def quantiles(): js.Array[Double] = js.native
+    def invertExtent(value: Range): js.Tuple2[Double, Double] = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleQuantile[Range](): Quantile.Facade[Range] = js.native
+  }
+
   trait API {
     def quantile(
         domain: Seq[Double],
@@ -74,8 +88,9 @@ object Quantile {
       domain: Seq[Double],
       range: Seq[Range]
   ): Quantile[Range] = {
-    Scale.scaleQuantile[Range]()
+    val facade = Facade.scaleQuantile[Range]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
+    new Quantile(facade)
   }
 }

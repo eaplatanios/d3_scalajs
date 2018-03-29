@@ -16,7 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 
 /** Sequential scales are similar to continuous scales in that they map a continuous, numeric input domain to a
   * continuous output range. However, unlike continuous scales, the output range of a sequential scale is fixed by its
@@ -24,23 +24,36 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Sequential[Output] extends Scale[Double, Double, Output] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Tuple2[Double, Double]): this.type = js.native
-
-  private[scale] def interpolator[IO](interpolator: js.Function1[Double, IO]): Sequential[IO] = js.native
-
-  /** Enables/disables clamping for this scale. */
-  private[scale] def clamp(clamp: Boolean): this.type = js.native
-
+class Sequential[Output] private[scale] (
+    override private[d3] val facade: Sequential.Facade[Output]
+) extends Scale[Double, Double, Output, Sequential.Facade[Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
-  @JSName("clamp") def clamped(): Boolean = js.native
+  def clamped(): Boolean = facade.clamp()
 
   /** Returns the interpolator used by this scale. */
-  @JSName("interpolate") def interpolator(): js.Function1[Double, Output] = js.native
+  def interpolator(): js.Function1[Double, Output] = facade.interpolate()
+
+  override protected def copy(facade: Sequential.Facade[Output]): Sequential[Output] = {
+    new Sequential(facade)
+  }
 }
 
 object Sequential {
+  @js.native private[scale] trait Facade[Output]
+      extends Scale.Facade[Double, Double, Output, Facade[Output]] {
+    def domain(domain: js.Tuple2[Double, Double]): this.type = js.native
+    def interpolator[IO](interpolator: js.Function1[Double, IO]): Sequential.Facade[IO] = js.native
+    def clamp(clamp: Boolean): this.type = js.native
+
+    def clamp(): Boolean = js.native
+    def interpolate(): js.Function1[Double, Output] = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleSequential[Output](interpolator: js.Function1[Double, Output]): Sequential.Facade[Output] = js.native
+  }
+
   trait API {
     def sequential[Output](
         interpolator: Double => Output,
@@ -68,8 +81,9 @@ object Sequential {
       domain: (Double, Double) = (0.0, 1.0),
       clamped: Boolean = false
   ): Sequential[Output] = {
-    Scale.scaleSequential[Output](interpolator)
+    val facade = Facade.scaleSequential[Output](interpolator)
         .domain(domain)
         .clamp(clamped)
+    new Sequential(facade)
   }
 }

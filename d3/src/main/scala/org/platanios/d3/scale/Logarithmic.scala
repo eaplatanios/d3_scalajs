@@ -15,7 +15,10 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.interpolate.InterpolatorFactory
+
 import scala.scalajs.js
+import scala.scalajs.js.annotation.JSImport
 
 /** Logarithmic scales are similar to linear scales, except that a logarithmic transform is applied to the input domain
   * value before the output range value is computed. The mapping to the range value `y` can be expressed as a function
@@ -39,18 +42,31 @@ import scala.scalajs.js
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Logarithmic[Range, Output] extends ContinuousNumeric[Range, Output] {
-  /** Sets the interpolator of this scale. */
-  private[scale] def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Logarithmic[Range, IO] = js.native
-
-  /** Sets the logarithm base of this scale. */
-  private[scale] def base(base: Double): this.type = js.native
-
+class Logarithmic[Range, Output] private[scale] (
+    override private[d3] val facade: Logarithmic.Facade[Range, Output]
+) extends ContinuousNumeric[Range, Output, Logarithmic.Facade[Range, Output]] {
   /** Returns the logarithm base of this scale. */
-  def base(): Double = js.native
+  def base(): Double = facade.base()
+
+  override protected def copy(facade: Logarithmic.Facade[Range, Output]): Logarithmic[Range, Output] = {
+    new Logarithmic(facade)
+  }
 }
 
 object Logarithmic {
+  @js.native private[scale] trait Facade[Range, Output]
+      extends ContinuousNumeric.Facade[Range, Output, Facade[Range, Output]] {
+    def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Logarithmic.Facade[Range, IO] = js.native
+    def base(base: Double): this.type = js.native
+
+    def base(): Double = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleLog[Range, Output](): Logarithmic.Facade[Range, Output] = js.native
+  }
+
   trait API {
     def log[Range](
         domain: Seq[Double] = Seq(1.0, 10.0),
@@ -124,16 +140,16 @@ object Logarithmic {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Logarithmic[Range, Range] = {
-    val scale = Scale.scaleLog[Range, Range]()
+    val facade = Facade.scaleLog[Range, Range]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .base(base)
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Logarithmic(facade)
   }
 
   /** Constructs a new logarithmic scale.
@@ -208,17 +224,17 @@ object Logarithmic {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Logarithmic[Range, Output] = {
-    val scale = Scale.scaleLog[Range, Output]()
+    val facade = Facade.scaleLog[Range, Output]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .base(base)
         .clamp(clamped)
         .interpolate(interpolator)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Logarithmic(facade)
   }
 
   /** Constructs a new rounded logarithmic scale. This is done by using the round interpolator, by default.
@@ -264,15 +280,15 @@ object Logarithmic {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Logarithmic[Double, Double] = {
-    val scale = Scale.scaleLog[Double, Double]()
+    val facade = Facade.scaleLog[Double, Double]()
         .domain(js.Array(domain: _*))
         .rangeRound(js.Array(range: _*))
         .base(base)
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Logarithmic(facade)
   }
 }

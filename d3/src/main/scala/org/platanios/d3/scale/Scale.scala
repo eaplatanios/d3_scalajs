@@ -15,8 +15,9 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.Facade
+
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSImport
 
 /** Scales are a convenient abstraction for a fundamental task in visualization: mapping a dimension of abstract data to
   * a visual representation. Although most often used for position-encoding quantitative data, such as mapping a
@@ -44,29 +45,21 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-@JSImport("d3-scale", JSImport.Namespace)
-@js.native private[scale] object Scale extends js.Object {
-  private[scale] val scaleImplicit: js.Any = js.native
-  private[scale] def scaleLinear[Range, Output](): Linear[Range, Output] = js.native
-  private[scale] def scalePow[Range, Output](): Power[Range, Output] = js.native
-  private[scale] def scaleLog[Range, Output](): Logarithmic[Range, Output] = js.native
-  private[scale] def scaleIdentity(): Identity = js.native
-  private[scale] def scaleTime[Range, Output](): Time[Range, Output] = js.native
-  private[scale] def scaleUTC[Range, Output](): Time[Range, Output] = js.native
-  private[scale] def scaleSequential[Output](interpolator: js.Function1[Double, Output]): Sequential[Output] = js.native
-  private[scale] def scaleQuantize[Range](): Quantize[Range] = js.native
-  private[scale] def scaleQuantile[Range](): Quantile[Range] = js.native
-  private[scale] def scaleThreshold[Domain, Range](): Threshold[Domain, Range] = js.native
-  private[scale] def scaleOrdinal[Domain, Range](range: js.Array[Range]): Ordinal[Domain, Range] = js.native
-  private[scale] def scaleBand[Domain](): Band[Domain] = js.native
-  private[scale] def scalePoint[Domain](): Point[Domain] = js.native
+object Scale {
+  @js.native trait Facade[Domain, Range, Output, F <: Facade[Domain, Range, Output, F]] extends js.Object {
+    def apply(x: Domain): Output = js.native
+    def domain(): js.Array[Domain] = js.native
+    def range(): js.Array[Range] = js.native
+    def copy(): F = js.native
+  }
 }
 
-trait Scale[Domain, Range, Output] extends js.Object {
-  def apply(x: Domain): Output = js.native
-  def domain(): js.Array[Domain] = js.native
-  def range(): js.Array[Range] = js.native
+trait Scale[Domain, Range, Output, F <: Scale.Facade[Domain, Range, Output, F]]
+    extends Facade[Scale[Domain, Range, Output, F], F] {
+  def apply(x: Domain): Output = facade.apply(x)
+  def domain(): js.Array[Domain] = facade.domain()
+  def range(): js.Array[Range] = facade.range()
 
   /** Returns an exact copy of this scale. Changes to this scale will not affect the returned scale, and vice versa. */
-  def copy(): this.type = js.native
+  def copy(): Scale[Domain, Range, Output, F] = copy(facade.copy())
 }

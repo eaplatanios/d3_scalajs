@@ -15,8 +15,9 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.interpolate.InterpolatorFactory
+
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
 
 /** Continuous scales map a continuous, quantitative input domain to a continuous output range. If the range is also
   * numeric, the mapping may be inverted. A continuous scale is not constructed directly; instead, try a linear, power,
@@ -45,27 +46,13 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait ContinuousNumeric[Range, Output] extends Scale[Double, Range, Output] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[Double]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Array[Range]): this.type = js.native
-
-  /** Sets the range of this scale with rounding enabled. */
-  private[scale] def rangeRound(range: js.Array[Double]): this.type = js.native
-
-  /** Enables/disables clamping for this scale. */
-  private[scale] def clamp(clamp: Boolean): this.type = js.native
-
-  /** Sets the niceness of this scale. */
-  private[scale] def nice(count: Int = -1): this.type = js.native
-
+trait ContinuousNumeric[Range, Output, F <: ContinuousNumeric.Facade[Range, Output, F]]
+    extends Scale[Double, Range, Output, F] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
-  @JSName("clamp") def clamped(): Boolean = js.native
+  def clamped(): Boolean = facade.clamp()
 
   /** Returns the interpolator used by this scale. */
-  @JSName("interpolate") def interpolator(): InterpolatorFactory[Range, Output] = js.native
+  def interpolator(): InterpolatorFactory[Range, Output] = facade.interpolate()
 
   /** Given a value from the range, returns the corresponding value from the domain. Inversion is useful for
     * interaction, say to determine the data value corresponding to the position of the mouse. For example, to invert a
@@ -89,7 +76,7 @@ import scala.scalajs.js.annotation.JSName
     * @param  value Value in the range to invert.
     * @return Inverted value in the domain of this scale.
     */
-  def invert(value: Output): Double = js.native
+  def invert(value: Output): Double = facade.invert(value)
 
   /** Returns approximately `count` representative values from the scale’s domain. If count is not specified, it
     * defaults to `10`. The returned tick values are uniformly spaced, have human-readable values (such as multiples of
@@ -100,7 +87,7 @@ import scala.scalajs.js.annotation.JSName
     * @param  count Hint for the number of ticks to return.
     * @return Array containing the ticks.
     */
-  def ticks(count: Int = 10): js.Array[Double] = js.native
+  def ticks(count: Int = 10): js.Array[Double] = facade.ticks(count)
 
   /** Returns a [number format](https://github.com/d3/d3-format) function suitable for displaying a tick value,
     * automatically computing the appropriate precision based on the fixed interval between tick values. The specified
@@ -130,5 +117,24 @@ import scala.scalajs.js.annotation.JSName
     * @param  specifier Format specifier to use.
     * @return Number format function suitable for displaying a tick value.
     */
-  def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = js.native
+  def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = {
+    facade.tickFormat(count, specifier)
+  }
+}
+
+object ContinuousNumeric {
+  @js.native private[scale] trait Facade[Range, Output, F <: Facade[Range, Output, F]]
+      extends Scale.Facade[Double, Range, Output, F] {
+    def domain(domain: js.Array[Double]): this.type = js.native
+    def range(range: js.Array[Range]): this.type = js.native
+    def rangeRound(range: js.Array[Double]): this.type = js.native
+    def clamp(clamp: Boolean): this.type = js.native
+    def nice(count: Int = -1): this.type = js.native
+
+    def clamp(): Boolean = js.native
+    def interpolate(): InterpolatorFactory[Range, Output] = js.native
+    def invert(value: Output): Double = js.native
+    def ticks(count: Int = 10): js.Array[Double] = js.native
+    def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = js.native
+  }
 }

@@ -16,7 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 
 /** Band scales are like ordinal scales except that the output range is continuous and numeric. Discrete output values
   * are automatically computed by the scale by dividing the continuous range into uniform bands. Band scales are
@@ -46,51 +46,61 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Band[Domain] extends Scale[Domain, js.Tuple2[Double, Double], Double] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[Domain]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Tuple2[Double, Double]): this.type = js.native
-
-  /** Sets the range of this scale with rounding enabled. */
-  private[scale] def rangeRound(range: js.Tuple2[Double, Double]): this.type = js.native
-
-  /** Enables/disables rounding for this scale. */
-  private[scale] def round(round: Boolean): this.type = js.native
-
-  /** Sets both the inner and the outer padding of this scale to the same value. */
-  private[scale] def padding(padding: Double): this.type = js.native
-
-  /** Sets the inner padding of this scale. */
-  private[scale] def paddingInner(padding: Double): this.type = js.native
-
-  /** Sets the outer padding of this scale. */
-  private[scale] def paddingOuter(padding: Double): this.type = js.native
-
-  /** Sets the alignment of this scale. */
-  private[scale] def align(align: Double): this.type = js.native
-
+class Band[Domain] private[scale] (
+    override private[d3] val facade: Band.Facade[Domain]
+) extends Scale[Domain, js.Tuple2[Double, Double], Double, Band.Facade[Domain]] {
   /** Returns `true` if the range is rounded. */
-  @JSName("round") def rounded(): Boolean = js.native
+  def rounded(): Boolean = facade.round()
+
+  /** Returns the padding value. */
+  def padding(): Double = facade.padding()
 
   /** Returns the inner padding value. */
-  def paddingInner(): Double = js.native
+  def paddingInner(): Double = facade.paddingInner()
 
   /** Returns the outer padding value. */
-  def paddingOuter(): Double = js.native
+  def paddingOuter(): Double = facade.paddingOuter()
 
   /** Returns the alignment value. */
-  @JSName("align") def alignment(): Double = js.native
+  def alignment(): Double = facade.align()
 
   /** Returns the width of each band. */
-  def bandwidth(): Double = js.native
+  def bandwidth(): Double = facade.bandwidth()
 
-  /** Returns the distance between the starts of adjacent bands. */
-  def step(): Double = js.native
+  /** Returns the distance between the starts of adjacent points, which is always equal to zero. */
+  def step(): Double = facade.step()
+
+  override protected def copy(facade: Band.Facade[Domain]): Band[Domain] = {
+    new Band(facade)
+  }
 }
 
 object Band {
+  @js.native private[scale] trait Facade[Domain]
+      extends Scale.Facade[Domain, js.Tuple2[Double, Double], Double, Facade[Domain]] {
+    def domain(domain: js.Array[Domain]): this.type = js.native
+    def range(range: js.Tuple2[Double, Double]): this.type = js.native
+    def rangeRound(range: js.Tuple2[Double, Double]): this.type = js.native
+    def round(round: Boolean): this.type = js.native
+    def padding(padding: Double): this.type = js.native
+    def paddingInner(padding: Double): this.type = js.native
+    def paddingOuter(padding: Double): this.type = js.native
+    def align(align: Double): this.type = js.native
+
+    def round(): Boolean = js.native
+    def padding(): Double = js.native
+    def paddingInner(): Double = js.native
+    def paddingOuter(): Double = js.native
+    def align(): Double = js.native
+    def bandwidth(): Double = js.native
+    def step(): Double = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleBand[Domain](): Band.Facade[Domain] = js.native
+  }
+
   trait API {
     def band[Domain](
         domain: Seq[Domain] = Seq.empty,
@@ -137,12 +147,13 @@ object Band {
       alignment: Double = 0.5,
       rounded: Boolean = false
   ): Band[Domain] = {
-    Scale.scaleBand[Domain]()
+    val facade = Facade.scaleBand[Domain]()
         .domain(js.Array(domain: _*))
         .range(range)
         .paddingInner(paddingInner)
         .paddingOuter(paddingOuter)
         .align(alignment)
         .round(rounded)
+    new Band(facade)
   }
 }

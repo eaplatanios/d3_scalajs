@@ -16,7 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 
 /** Quantize scales are similar to linear scales, except that they use a discrete rather than continuous range. The
   * continuous input domain is divided into uniform segments based on the number of values in (i.e., the cardinality of)
@@ -47,16 +47,9 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Quantize[Range] extends Scale[Double, Range, Range] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Tuple2[Double, Double]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Array[Range]): this.type = js.native
-
-  /** Sets the niceness of this scale. */
-  private[scale] def nice(count: Int = -1): this.type = js.native
-
+class Quantize[Range] private[scale] (
+    override private[d3] val facade: Quantize.Facade[Range]
+) extends Scale[Double, Range, Range, Quantize.Facade[Range]] {
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range: the inverse of
     * quantize. This method is useful for interaction, say to determine the value in the domain that corresponds to the
     * pixel location under the mouse.
@@ -73,7 +66,7 @@ import scala.scalajs.js.annotation.JSName
     * @param  value Value in the range to invert.
     * @return Inverted value in the domain of this scale.
     */
-  @JSName("invertExtent") def invert(value: Range): js.Tuple2[Double, Double] = js.native
+  def invert(value: Range): js.Tuple2[Double, Double] = facade.invertExtent(value)
 
   /** Returns approximately `count` representative values from the scale’s domain. If count is not specified, it
     * defaults to `10`. The returned tick values are uniformly spaced, have human-readable values (such as multiples of
@@ -84,7 +77,7 @@ import scala.scalajs.js.annotation.JSName
     * @param  count Hint for the number of ticks to return.
     * @return Array containing the ticks.
     */
-  def ticks(count: Int = 10): js.Array[Double] = js.native
+  def ticks(count: Int = 10): js.Array[Double] = facade.ticks(count)
 
   /** Returns a [number format](https://github.com/d3/d3-format) function suitable for displaying a tick value,
     * automatically computing the appropriate precision based on the fixed interval between tick values. The specified
@@ -114,10 +107,32 @@ import scala.scalajs.js.annotation.JSName
     * @param  specifier Format specifier to use.
     * @return Number format function suitable for displaying a tick value.
     */
-  def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = js.native
+  def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = {
+    facade.tickFormat(count, specifier)
+  }
+
+  override protected def copy(facade: Quantize.Facade[Range]): Quantize[Range] = {
+    new Quantize(facade)
+  }
 }
 
 object Quantize {
+  @js.native private[scale] trait Facade[Range]
+      extends Scale.Facade[Double, Range, Range, Facade[Range]] {
+    def domain(domain: js.Tuple2[Double, Double]): this.type = js.native
+    def range(range: js.Array[Range]): this.type = js.native
+    def nice(count: Int = -1): this.type = js.native
+
+    def invertExtent(value: Range): js.Tuple2[Double, Double] = js.native
+    def ticks(count: Int = 10): js.Array[Double] = js.native
+    def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleQuantize[Range](): Quantize.Facade[Range] = js.native
+  }
+
   trait API {
     def quantize[Range](
         domain: (Double, Double) = (0.0, 1.0),
@@ -147,13 +162,13 @@ object Quantize {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Quantize[Range] = {
-    val scale = Scale.scaleQuantize[Range]()
+    val facade = Facade.scaleQuantize[Range]()
         .domain(domain)
         .range(js.Array(range: _*))
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Quantize(facade)
   }
 }

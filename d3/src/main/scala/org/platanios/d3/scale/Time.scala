@@ -15,10 +15,11 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.interpolate.InterpolatorFactory
 import org.platanios.d3.time.{CountableTimeInterval, TimeInterval}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 
 /** Time scales are a variant of linear scales that have a temporal domain: domain values are coerced to
   * [dates](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date) rather than numbers, and invert
@@ -43,38 +44,14 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Time[Range, Output] extends Scale[js.Date, Range, Output] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[js.Date]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Array[Range]): this.type = js.native
-
-  /** Sets the range of this scale with rounding enabled. */
-  private[scale] def rangeRound(range: js.Array[Double]): this.type = js.native
-
-  /** Enables/disables clamping for this scale. */
-  private[scale] def clamp(clamp: Boolean): this.type = js.native
-
-  /** Makes this scale "nice". */
-  private[scale] def nice(): this.type = js.native
-
-  /** Sets the niceness of this scale. */
-  private[scale] def nice(count: Int): this.type = js.native
-
-  /** Sets the niceness of this scale. */
-  private[scale] def nice(interval: CountableTimeInterval): this.type = js.native
-
-  /** Sets the niceness of this scale. */
-  private[scale] def nice(interval: CountableTimeInterval, step: Int): this.type = js.native
-
-  private[scale] def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Time[Range, IO] = js.native
-
+class Time[Range, Output] private[scale] (
+    override private[d3] val facade: Time.Facade[Range, Output]
+) extends Scale[js.Date, Range, Output, Time.Facade[Range, Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
-  @JSName("clamp") def clamped(): Boolean = js.native
+  def clamped(): Boolean = facade.clamp()
 
   /** Returns the interpolator used by this scale. */
-  @JSName("interpolate") def interpolator(): InterpolatorFactory[Range, Output] = js.native
+  def interpolator(): InterpolatorFactory[Range, Output] = facade.interpolate()
 
   /** Given a value from the range, returns the corresponding value from the domain. Inversion is useful for
     * interaction, say to determine the data value corresponding to the position of the mouse. For example, to invert a
@@ -98,7 +75,7 @@ import scala.scalajs.js.annotation.JSName
     * @param  value Value in the range to invert.
     * @return Inverted value in the domain of this scale.
     */
-  def invert(value: Output): Double = js.native
+  def invert(value: Output): Double = facade.invert(value)
 
   /** Returns representative dates from the scale’s domain. The returned tick values are (mostly) uniformly-spaced, have
     * sensible values (such as every day at midnight), and are guaranteed to be within the extent of the domain. Ticks
@@ -150,7 +127,7 @@ import scala.scalajs.js.annotation.JSName
     *
     * @return Array containing the ticks.
     */
-  def ticks[T: Time.TicksArgument](countsOrInternal: T = null): js.Array[js.Date] = js.native
+  def ticks[T: Time.TicksArgument](countsOrInternal: T = null): js.Array[js.Date] = facade.ticks(countsOrInternal)
 
   /** Returns a time format function suitable for displaying tick values. If a format specifier is provided, this method
     * is equivalent to `format`. If a specifier is not provided, the default time format is used. The default
@@ -172,10 +149,39 @@ import scala.scalajs.js.annotation.JSName
     * @param  specifier Format specifier to use.
     * @return Time format function suitable for displaying a tick value.
     */
-  def tickFormat(specifier: String = null): js.Function1[js.Date, String] = js.native
+  def tickFormat(specifier: String = null): js.Function1[js.Date, String] = facade.tickFormat(specifier)
+
+  override protected def copy(facade: Time.Facade[Range, Output]): Time[Range, Output] = {
+    new Time(facade)
+  }
 }
 
 object Time {
+  @js.native private[scale] trait Facade[Range, Output]
+      extends Scale.Facade[js.Date, Range, Output, Facade[Range, Output]] {
+    def domain(domain: js.Array[js.Date]): this.type = js.native
+    def range(range: js.Array[Range]): this.type = js.native
+    def rangeRound(range: js.Array[Double]): this.type = js.native
+    def clamp(clamp: Boolean): this.type = js.native
+    def nice(): this.type = js.native
+    def nice(count: Int): this.type = js.native
+    def nice(interval: CountableTimeInterval): this.type = js.native
+    def nice(interval: CountableTimeInterval, step: Int): this.type = js.native
+    def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Time.Facade[Range, IO] = js.native
+
+    def clamp(): Boolean = js.native
+    def interpolate(): InterpolatorFactory[Range, Output] = js.native
+    def invert(value: Output): Double = js.native
+    def ticks[T: Time.TicksArgument](countsOrInternal: T = null): js.Array[js.Date] = js.native
+    def tickFormat(specifier: String = null): js.Function1[js.Date, String] = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scaleTime[Range, Output](): Time.Facade[Range, Output] = js.native
+    def scaleUTC[Range, Output](): Time.Facade[Range, Output] = js.native
+  }
+
   trait TicksArgument[T]
 
   object TicksArgument {
@@ -269,17 +275,17 @@ object Time {
       niceInterval: (CountableTimeInterval, Int) = null,
       useUTC: Boolean = false
   ): Time[Range, Range] = {
-    val scale = (if (useUTC) Scale.scaleUTC[Range, Range]() else Scale.scaleTime[Range, Range]())
+    val facade = (if (useUTC) Facade.scaleUTC[Range, Range]() else Facade.scaleTime[Range, Range]())
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice && niceInterval != null)
-      scale.nice(niceInterval._1, niceInterval._2)
+      facade.nice(niceInterval._1, niceInterval._2)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Time(facade)
   }
 
   /** Constructs a new time scale.
@@ -362,18 +368,18 @@ object Time {
       niceInterval: (CountableTimeInterval, Int) = null,
       useUTC: Boolean = false
   ): Time[Range, Output] = {
-    val scale = (if (useUTC) Scale.scaleUTC[Range, Output]() else Scale.scaleTime[Range, Output]())
+    val facade = (if (useUTC) Facade.scaleUTC[Range, Output]() else Facade.scaleTime[Range, Output]())
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .clamp(clamped)
         .interpolate(interpolator)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice && niceInterval != null)
-      scale.nice(niceInterval._1, niceInterval._2)
+      facade.nice(niceInterval._1, niceInterval._2)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Time(facade)
   }
 
   /** Constructs a new rounded time scale.
@@ -427,16 +433,16 @@ object Time {
       niceInterval: (CountableTimeInterval, Int) = null,
       useUTC: Boolean = false
   ): Time[Double, Double] = {
-    val scale = (if (useUTC) Scale.scaleUTC[Double, Double]() else Scale.scaleTime[Double, Double]())
+    val facade = (if (useUTC) Facade.scaleUTC[Double, Double]() else Facade.scaleTime[Double, Double]())
         .domain(js.Array(domain: _*))
         .rangeRound(js.Array(range: _*))
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice && niceInterval != null)
-      scale.nice(niceInterval._1, niceInterval._2)
+      facade.nice(niceInterval._1, niceInterval._2)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Time(facade)
   }
 }

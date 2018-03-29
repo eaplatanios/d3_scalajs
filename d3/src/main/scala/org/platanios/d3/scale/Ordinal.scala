@@ -16,6 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
+import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.|
 
 /** Unlike continuous scales, ordinal scales have a discrete domain and range. For example, an ordinal scale might map
@@ -29,24 +30,37 @@ import scala.scalajs.js.|
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Ordinal[Domain, Range] extends Scale[Domain, Range, Range] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[Domain]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Array[Range]): this.type = js.native
-
-  /** Sets the value used for unknown input values. */
-  private[scale] def unknown(value: Range | js.Any): this.type = js.native
-
+class Ordinal[Domain, Range] private[scale] (
+    override private[d3] val facade: Ordinal.Facade[Domain, Range]
+) extends Scale[Domain, Range, Range, Ordinal.Facade[Domain, Range]] {
   /** Returns the value used for unknown input values. */
-  def unknown(): Range | js.Any = js.native
+  def unknown(): Range | js.Any = facade.unknown()
+
+  override protected def copy(facade: Ordinal.Facade[Domain, Range]): Ordinal[Domain, Range] = {
+    new Ordinal(facade)
+  }
 }
 
 object Ordinal {
+  @js.native private[scale] trait Facade[Domain, Range]
+      extends Scale.Facade[Domain, Range, Range, Facade[Domain, Range]] {
+    def domain(domain: js.Array[Domain]): this.type = js.native
+    def range(range: js.Array[Range]): this.type = js.native
+    def unknown(value: Range | js.Any): this.type = js.native
+
+    def unknown(): Range | js.Any = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    val scaleImplicit: js.Any = js.native
+
+    def scaleOrdinal[Domain, Range](range: js.Array[Range]): Ordinal.Facade[Domain, Range] = js.native
+  }
+
   /** Special value for unknown values that enables implicit domain construction: unknown values are implicitly added
     * to the domain. */
-  val implicitUnknown: js.Any = Scale.scaleImplicit
+  val implicitUnknown: js.Any = Facade.scaleImplicit
 
   trait API {
     def ordinal[Domain, Range](
@@ -81,11 +95,11 @@ object Ordinal {
       domain: Seq[Domain] = null,
       unknown: Range = null
   ): Ordinal[Domain, Range] = {
-    val scale = Scale.scaleOrdinal[Domain, Range](js.Array(range: _*))
+    val facade = Facade.scaleOrdinal[Domain, Range](js.Array(range: _*))
     if (domain != null)
-      scale.domain(js.Array(domain: _*))
+      facade.domain(js.Array(domain: _*))
     if (unknown != null)
-      scale.unknown(unknown)
-    scale
+      facade.unknown(unknown)
+    new Ordinal(facade)
   }
 }

@@ -15,7 +15,10 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.interpolate.InterpolatorFactory
+
 import scala.scalajs.js
+import scala.scalajs.js.annotation.JSImport
 
 /** Power scales are similar to linear scales, except that an exponential transform is applied to the input domain value
   * before the output range value is computed. Each range value `y` can be expressed as a function of the domain
@@ -24,18 +27,31 @@ import scala.scalajs.js
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Power[Range, Output] extends ContinuousNumeric[Range, Output] {
-  /** Sets the interpolator of this scale. */
-  private[scale] def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Power[Range, IO] = js.native
-
-  /** Sets the exponent of this scale. */
-  private[scale] def exponent(exponent: Double): this.type = js.native
-
+class Power[Range, Output] private[scale] (
+    override private[d3] val facade: Power.Facade[Range, Output]
+) extends ContinuousNumeric[Range, Output, Power.Facade[Range, Output]] {
   /** Returns the exponent of this scale. */
-  def exponent(): Double = js.native
+  def exponent(): Double = facade.exponent()
+
+  override protected def copy(facade: Power.Facade[Range, Output]): Power[Range, Output] = {
+    new Power(facade)
+  }
 }
 
 object Power {
+  @js.native private[scale] trait Facade[Range, Output]
+      extends ContinuousNumeric.Facade[Range, Output, Facade[Range, Output]] {
+    def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Power.Facade[Range, IO] = js.native
+    def exponent(exponent: Double): this.type = js.native
+
+    def exponent(): Double = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scalePow[Range, Output](): Power.Facade[Range, Output] = js.native
+  }
+
   trait API {
     def power[Range](
         domain: Seq[Double] = Seq(0.0, 1.0),
@@ -117,16 +133,16 @@ object Power {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Power[Range, Range] = {
-    val scale = Scale.scalePow[Range, Range]()
+    val facade = Facade.scalePow[Range, Range]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .exponent(exponent)
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Power(facade)
   }
 
   /** Constructs a new power scale.
@@ -201,17 +217,17 @@ object Power {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Power[Range, Output] = {
-    val scale = Scale.scalePow[Range, Output]()
+    val facade = Facade.scalePow[Range, Output]()
         .domain(js.Array(domain: _*))
         .range(js.Array(range: _*))
         .exponent(exponent)
         .clamp(clamped)
         .interpolate(interpolator)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Power(facade)
   }
 
   /** Constructs a new rounded power scale. This is done by using the round interpolator, by default.
@@ -257,15 +273,15 @@ object Power {
       nice: Boolean = false,
       niceCount: Int = -1
   ): Power[Double, Double] = {
-    val scale = Scale.scalePow[Double, Double]()
+    val facade = Facade.scalePow[Double, Double]()
         .domain(js.Array(domain: _*))
         .rangeRound(js.Array(range: _*))
         .exponent(exponent)
         .clamp(clamped)
     if (nice && niceCount > 0)
-      scale.nice(niceCount)
+      facade.nice(niceCount)
     else if (nice)
-      scale.nice()
-    scale
+      facade.nice()
+    new Power(facade)
   }
 }

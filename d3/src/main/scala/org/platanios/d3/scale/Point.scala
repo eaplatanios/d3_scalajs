@@ -16,7 +16,7 @@
 package org.platanios.d3.scale
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.JSImport
 
 /** Point scales are a variant of band scales with the bandwidth fixed to zero. Point scales are typically used for
   * scatter plots with an ordinal or categorical dimension. The unknown value of a point scale is always undefined:
@@ -37,39 +37,47 @@ import scala.scalajs.js.annotation.JSName
   *
   * @author Emmanouil Antonios Platanios
   */
-@js.native trait Point[Domain] extends Scale[Domain, js.Tuple2[Double, Double], Double] {
-  /** Sets the domain of this scale. */
-  private[scale] def domain(domain: js.Array[Domain]): this.type = js.native
-
-  /** Sets the range of this scale. */
-  private[scale] def range(range: js.Tuple2[Double, Double]): this.type = js.native
-
-  /** Sets the range of this scale with rounding enabled. */
-  private[scale] def rangeRound(range: js.Tuple2[Double, Double]): this.type = js.native
-
-  /** Enables/disables rounding for this scale. */
-  private[scale] def round(round: Boolean): this.type = js.native
-
-  /** Sets the padding of this scale. */
-  private[scale] def padding(padding: Double): this.type = js.native
-
-  /** Sets the alignment of this scale. */
-  private[scale] def align(align: Double): this.type = js.native
-
+class Point[Domain] private[scale] (
+    override private[d3] val facade: Point.Facade[Domain]
+) extends Scale[Domain, js.Tuple2[Double, Double], Double, Point.Facade[Domain]] {
   /** Returns `true` if the range is rounded. */
-  @JSName("round") def rounded(): Boolean = js.native
+  def rounded(): Boolean = facade.round()
 
   /** Returns the padding value. */
-  def padding(): Double = js.native
+  def padding(): Double = facade.padding()
 
   /** Returns the alignment value. */
-  @JSName("align") def alignment(): Double = js.native
+  def alignment(): Double = facade.align()
 
   /** Returns the distance between the starts of adjacent points, which is always equal to zero. */
-  def step(): Double = js.native
+  def step(): Double = facade.step()
+
+  override protected def copy(facade: Point.Facade[Domain]): Point[Domain] = {
+    new Point(facade)
+  }
 }
 
 object Point {
+  @js.native private[scale] trait Facade[Domain]
+      extends Scale.Facade[Domain, js.Tuple2[Double, Double], Double, Facade[Domain]] {
+    def domain(domain: js.Array[Domain]): this.type = js.native
+    def range(range: js.Tuple2[Double, Double]): this.type = js.native
+    def rangeRound(range: js.Tuple2[Double, Double]): this.type = js.native
+    def round(round: Boolean): this.type = js.native
+    def padding(padding: Double): this.type = js.native
+    def align(align: Double): this.type = js.native
+
+    def round(): Boolean = js.native
+    def padding(): Double = js.native
+    def align(): Double = js.native
+    def step(): Double = js.native
+  }
+
+  @JSImport("d3-scale", JSImport.Namespace)
+  @js.native private[scale] object Facade extends js.Object {
+    def scalePoint[Domain](): Point.Facade[Domain] = js.native
+  }
+
   trait API {
     def point[Domain](
         domain: Seq[Domain] = Seq.empty,
@@ -112,11 +120,12 @@ object Point {
       alignment: Double = 0.5,
       rounded: Boolean = false
   ): Point[Domain] = {
-    Scale.scalePoint[Domain]()
+    val facade = Facade.scalePoint[Domain]()
         .domain(js.Array(domain: _*))
         .range(range)
         .padding(padding)
         .align(alignment)
         .round(rounded)
+    new Point(facade)
   }
 }
