@@ -26,86 +26,12 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Identity private[scale] (
     override private[d3] val facade: Identity.Facade
-) extends Scale[Double, Double, Double, Identity.Facade] {
-  /** Given a value from the range, returns the corresponding value from the domain. Inversion is useful for
-    * interaction, say to determine the data value corresponding to the position of the mouse. For example, to invert a
-    * position encoding:
-    * {{{
-    *   val x = d3.scale.identity()
-    *
-    *   x.invert(0.4) // 0.4
-    *   x.invert(0.6) // 0.6
-    * }}}
-    * If the given value is outside the range, and clamping is not enabled, the mapping may be extrapolated such that
-    * the returned value is outside the domain. This method is only supported if the range is numeric. If the range is
-    * not numeric, this method returns `NaN`.
-    *
-    * For a valid value `y` in the range, `identity(identity.invert(y))` approximately equals `y`. Similarly, for a
-    * valid value `x` in the domain, `identity.invert(identity(x)` approximately equals `x`. The scale and its
-    * inverse may not be exact due to the limitations of floating point precision.
-    *
-    * @param  value Value in the range to invert.
-    * @return Inverted value in the domain of this scale.
-    */
-  def invert(value: Double): Double = facade.invert(value)
-
-  /** Returns approximately `count` representative values from the scale’s domain. If count is not specified, it
-    * defaults to `10`. The returned tick values are uniformly spaced, have human-readable values (such as multiples of
-    * powers of 10), and are guaranteed to be within the extent of the domain. Ticks are often used to display reference
-    * lines, or tick marks, in conjunction with the visualized data. The specified count is only a hint; the scale may
-    * return more or fewer values depending on the domain.
-    *
-    * @param  count Hint for the number of ticks to return.
-    * @return Array containing the ticks.
-    */
-  def ticks(count: Int = 10): js.Array[Double] = facade.ticks(count)
-
-  /** Returns a [number format](https://github.com/d3/d3-format) function suitable for displaying a tick value,
-    * automatically computing the appropriate precision based on the fixed interval between tick values. The specified
-    * count should have the same value as the count that is used to generate the
-    * [tick values](https://github.com/d3/d3-scale#continuous_ticks).
-    *
-    * An optional specifier allows a [custom format](https://github.com/d3/d3-format#locale_format) where the precision
-    * of the format is automatically set by the scale as appropriate for the tick interval. For example, to format
-    * percentage change, you might say:
-    * {{{
-    *   val x = d3.scale.linear(
-    *     domain = Seq(-1, 1),
-    *     range = Seq(0, 960))
-    *
-    *   val ticks = x.ticks(5)
-    *   val tickFormat = x.tickFormat(5, "+%")
-    *
-    *   ticks.map(tickFormat) // ["-100%", "-50%", "+0%", "+50%", "+100%"]
-    * }}}
-    *
-    * If `specifier` uses the format type `s`, the scale will return an
-    * [SI-prefix format](https://github.com/d3/d3-format#locale_formatPrefix) based on the largest value in the domain.
-    * If the specifier already specifies a precision, this method is equivalent to
-    * [`locale.format()`](https://github.com/d3/d3-format#locale_format).
-    *
-    * @param  count     Hint for the number of ticks to return.
-    * @param  specifier Format specifier to use.
-    * @return Number format function suitable for displaying a tick value.
-    */
-  def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = {
-    facade.tickFormat(count, specifier)
-  }
-
+) extends ContinuousNumeric[Double, Double, Identity.Facade] {
   override protected def copy(facade: Identity.Facade): Identity = new Identity(facade)
 }
 
 object Identity {
-  @js.native private[scale] trait Facade
-      extends Scale.Facade[Double, Double, Double, Facade] {
-    def domain(domain: js.Array[Double]): this.type = js.native
-    def range(range: js.Array[Double]): this.type = js.native
-    def nice(count: Int = -1): this.type = js.native
-
-    def invert(value: Double): Double = js.native
-    def ticks(count: Int = 10): js.Array[Double] = js.native
-    def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = js.native
-  }
+  @js.native private[scale] trait Facade extends ContinuousNumeric.Facade[Double, Double, Facade]
 
   @JSImport("d3-scale", JSImport.Namespace)
   @js.native private[scale] object Facade extends js.Object {
