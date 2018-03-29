@@ -24,7 +24,7 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Sequential[Output] private[scale] (
+class Sequential[Output] protected (
     override private[d3] val facade: Sequential.Facade[Output]
 ) extends Scale[Double, Double, Output, Sequential.Facade[Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
@@ -39,7 +39,7 @@ class Sequential[Output] private[scale] (
 }
 
 object Sequential {
-  @js.native private[scale] trait Facade[Output]
+  @js.native private[d3] trait Facade[Output]
       extends Scale.Facade[Double, Double, Output, Facade[Output]] {
     def domain(domain: js.Tuple2[Double, Double]): this.type = js.native
     def interpolator[IO](interpolator: js.Function1[Double, IO]): Sequential.Facade[IO] = js.native
@@ -50,7 +50,7 @@ object Sequential {
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Sequential] object Facade extends js.Object {
     def scaleSequential[Output](interpolator: js.Function1[Double, Output]): Sequential.Facade[Output] = js.native
   }
 

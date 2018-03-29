@@ -26,20 +26,20 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Linear[Range, Output] private[scale] (
+class Linear[Range, Output] protected (
     override private[d3] val facade: Linear.Facade[Range, Output]
 ) extends ContinuousNumeric[Range, Output, Linear.Facade[Range, Output]] {
   override protected def copy(facade: Linear.Facade[Range, Output]): Linear[Range, Output] = new Linear(facade)
 }
 
 object Linear {
-  @js.native private[scale] trait Facade[Range, Output]
+  @js.native private[d3] trait Facade[Range, Output]
       extends ContinuousNumeric.Facade[Range, Output, Facade[Range, Output]] {
     def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Linear.Facade[Range, IO] = js.native
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Linear] object Facade extends js.Object {
     def scaleLinear[Range, Output](): Linear.Facade[Range, Output] = js.native
   }
 

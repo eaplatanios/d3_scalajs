@@ -24,17 +24,17 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Identity private[scale] (
+class Identity protected (
     override private[d3] val facade: Identity.Facade
 ) extends ContinuousNumeric[Double, Double, Identity.Facade] {
   override protected def copy(facade: Identity.Facade): Identity = new Identity(facade)
 }
 
 object Identity {
-  @js.native private[scale] trait Facade extends ContinuousNumeric.Facade[Double, Double, Facade]
+  @js.native private[d3] trait Facade extends ContinuousNumeric.Facade[Double, Double, Facade]
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Identity] object Facade extends js.Object {
     def scaleIdentity(): Identity.Facade = js.native
   }
 

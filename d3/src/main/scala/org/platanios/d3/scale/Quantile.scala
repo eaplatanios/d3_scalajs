@@ -27,7 +27,7 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Quantile[Range] private[scale] (
+class Quantile[Range] protected (
     override private[d3] val facade: Quantile.Facade[Range]
 ) extends Scale[Double, Range, Range, Quantile.Facade[Range]] {
   /** Returns the quantile thresholds. If the range contains `n` discrete values, the returned array will contain
@@ -55,7 +55,7 @@ class Quantile[Range] private[scale] (
 }
 
 object Quantile {
-  @js.native private[scale] trait Facade[Range]
+  @js.native private[d3] trait Facade[Range]
       extends Scale.Facade[Double, Range, Range, Facade[Range]] {
     def domain(domain: js.Array[Double]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
@@ -65,7 +65,7 @@ object Quantile {
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Quantile] object Facade extends js.Object {
     def scaleQuantile[Range](): Quantile.Facade[Range] = js.native
   }
 

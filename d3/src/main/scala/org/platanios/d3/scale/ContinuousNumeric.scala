@@ -47,7 +47,7 @@ import scala.scalajs.js
   * @author Emmanouil Antonios Platanios
   */
 trait ContinuousNumeric[Range, Output, F <: ContinuousNumeric.Facade[Range, Output, F]]
-    extends Scale[Double, Range, Output, F] {
+    extends TickScale[Double, Range, Output, Int, F] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 
@@ -77,54 +77,11 @@ trait ContinuousNumeric[Range, Output, F <: ContinuousNumeric.Facade[Range, Outp
     * @return Inverted value in the domain of this scale.
     */
   def invert(value: Output): Double = facade.invert(value)
-
-  /** Returns approximately `count` representative values from the scale’s domain. If count is not specified, it
-    * defaults to `10`. The returned tick values are uniformly spaced, have human-readable values (such as multiples of
-    * powers of 10), and are guaranteed to be within the extent of the domain. Ticks are often used to display reference
-    * lines, or tick marks, in conjunction with the visualized data. The specified count is only a hint; the scale may
-    * return more or fewer values depending on the domain.
-    *
-    * @param  count Hint for the number of ticks to return.
-    * @return Array containing the ticks.
-    */
-  def ticks(count: Int = 10): js.Array[Double] = facade.ticks(count)
-
-  /** Returns a [number format](https://github.com/d3/d3-format) function suitable for displaying a tick value,
-    * automatically computing the appropriate precision based on the fixed interval between tick values. The specified
-    * count should have the same value as the count that is used to generate the
-    * [tick values](https://github.com/d3/d3-scale#continuous_ticks).
-    *
-    * An optional specifier allows a [custom format](https://github.com/d3/d3-format#locale_format) where the precision
-    * of the format is automatically set by the scale as appropriate for the tick interval. For example, to format
-    * percentage change, you might say:
-    * {{{
-    *   val x = d3.scale.linear(
-    *     domain = Seq(-1, 1),
-    *     range = Seq(0, 960))
-    *
-    *   val ticks = x.ticks(5)
-    *   val tickFormat = x.tickFormat(5, "+%")
-    *
-    *   ticks.map(tickFormat) // ["-100%", "-50%", "+0%", "+50%", "+100%"]
-    * }}}
-    *
-    * If `specifier` uses the format type `s`, the scale will return an
-    * [SI-prefix format](https://github.com/d3/d3-format#locale_formatPrefix) based on the largest value in the domain.
-    * If the specifier already specifies a precision, this method is equivalent to
-    * [`locale.format()`](https://github.com/d3/d3-format#locale_format).
-    *
-    * @param  count     Hint for the number of ticks to return.
-    * @param  specifier Format specifier to use.
-    * @return Number format function suitable for displaying a tick value.
-    */
-  def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = {
-    facade.tickFormat(count, specifier)
-  }
 }
 
 object ContinuousNumeric {
-  @js.native private[scale] trait Facade[Range, Output, F <: Facade[Range, Output, F]]
-      extends Scale.Facade[Double, Range, Output, F] {
+  @js.native private[d3] trait Facade[Range, Output, F <: Facade[Range, Output, F]]
+      extends TickScale.Facade[Double, Range, Output, Int, F] {
     def domain(domain: js.Array[Double]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
     def rangeRound(range: js.Array[Double]): this.type = js.native
@@ -134,7 +91,5 @@ object ContinuousNumeric {
     def clamp(): Boolean = js.native
     def interpolate(): InterpolatorFactory[Range, Output] = js.native
     def invert(value: Output): Double = js.native
-    def ticks(count: Int = 10): js.Array[Double] = js.native
-    def tickFormat(count: Int = 10, specifier: String = ",f"): js.Function1[Double, String] = js.native
   }
 }

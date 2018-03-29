@@ -42,7 +42,7 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Logarithmic[Range, Output] private[scale] (
+class Logarithmic[Range, Output] protected (
     override private[d3] val facade: Logarithmic.Facade[Range, Output]
 ) extends ContinuousNumeric[Range, Output, Logarithmic.Facade[Range, Output]] {
   /** Returns the logarithm base of this scale. */
@@ -54,7 +54,7 @@ class Logarithmic[Range, Output] private[scale] (
 }
 
 object Logarithmic {
-  @js.native private[scale] trait Facade[Range, Output]
+  @js.native private[d3] trait Facade[Range, Output]
       extends ContinuousNumeric.Facade[Range, Output, Facade[Range, Output]] {
     def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Logarithmic.Facade[Range, IO] = js.native
     def base(base: Double): this.type = js.native
@@ -63,7 +63,7 @@ object Logarithmic {
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Logarithmic] object Facade extends js.Object {
     def scaleLog[Range, Output](): Logarithmic.Facade[Range, Output] = js.native
   }
 

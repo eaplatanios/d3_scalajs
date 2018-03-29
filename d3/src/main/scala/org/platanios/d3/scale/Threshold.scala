@@ -38,7 +38,7 @@ import scala.scalajs.js.|
   *
   * @author Emmanouil Antonios Platanios
   */
-class Threshold[Domain, Range] private[scale] (
+class Threshold[Domain, Range] protected (
     override private[d3] val facade: Threshold.Facade[Domain, Range]
 ) extends Scale[Domain, Range, Range, Threshold.Facade[Domain, Range]] {
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range, representing the
@@ -65,7 +65,7 @@ class Threshold[Domain, Range] private[scale] (
 }
 
 object Threshold {
-  @js.native private[scale] trait Facade[Domain, Range]
+  @js.native private[d3] trait Facade[Domain, Range]
       extends Scale.Facade[Domain, Range, Range, Facade[Domain, Range]] {
     def domain(domain: js.Array[Domain]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
@@ -74,7 +74,7 @@ object Threshold {
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Threshold] object Facade extends js.Object {
     def scaleThreshold[Domain, Range](): Threshold.Facade[Domain, Range] = js.native
   }
 

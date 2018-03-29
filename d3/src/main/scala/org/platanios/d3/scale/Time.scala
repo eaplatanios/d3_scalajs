@@ -44,9 +44,9 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Time[Range, Output] private[scale] (
+class Time[Range, Output] protected (
     override private[d3] val facade: Time.Facade[Range, Output]
-) extends Scale[js.Date, Range, Output, Time.Facade[Range, Output]] {
+) extends TickScale[js.Date, Range, Output, Time.Tick, Time.Facade[Range, Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 
@@ -77,88 +77,14 @@ class Time[Range, Output] private[scale] (
     */
   def invert(value: Output): Double = facade.invert(value)
 
-  /** Returns representative dates from the scale’s domain. The returned tick values are (mostly) uniformly-spaced, have
-    * sensible values (such as every day at midnight), and are guaranteed to be within the extent of the domain. Ticks
-    * are often used to display reference lines, or tick marks, in conjunction with the visualized data.
-    *
-    * An optional `count` may be specified to affect how many ticks are generated. If `count` is not specified, it
-    * defaults to `10`. The specified count is only a hint; the scale may return more or fewer values depending on the
-    * domain. For example, to create ten default ticks:
-    * {{{
-    *   d3.scale.Time().ticks(10)
-    *   // [Sat Jan 01 2000 00:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 03:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 06:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 09:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 12:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 15:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 18:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 21:00:00 GMT-0800 (PST),
-    *   //  Sun Jan 02 2000 00:00:00 GMT-0800 (PST)]
-    * }}}
-    *
-    * The following time intervals are considered for automatic ticks:
-    *
-    *   - 1, 5, 15, and 30 seconds,
-    *   - 1, 3, 6, and 12 hours,
-    *   - 1 and 2 days,
-    *   - 1 week,
-    *   - 1 and 3 months,
-    *   - 1 year.
-    *
-    * In lieu of a count, a time interval may be explicitly specified. To prune the generated ticks for a given time
-    * interval, use `interval.every()`. For example, to generate ticks at 15-minute intervals:
-    * {{{
-    *   d3.scale.Time(Seq(new js.Date(2000, 0, 1, 0), new js.Date(2000, 0, 1, 2)))
-    *     .ticks(d3.time.intervalEvery(15)) // TODO: Update when we fix the API.
-    *   // [Sat Jan 01 2000 00:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 00:15:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 00:30:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 00:45:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 01:00:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 01:15:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 01:30:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 01:45:00 GMT-0800 (PST),
-    *   //  Sat Jan 01 2000 02:00:00 GMT-0800 (PST)]
-    * }}}
-    *
-    * Note that, in some cases, such as with day ticks, specifying a step can result in irregular spacing of ticks
-    * because time intervals have varying length.
-    *
-    * @return Array containing the ticks.
-    */
-  def ticks[T: Time.TicksArgument](countsOrInternal: T = null): js.Array[js.Date] = facade.ticks(countsOrInternal)
-
-  /** Returns a time format function suitable for displaying tick values. If a format specifier is provided, this method
-    * is equivalent to `format`. If a specifier is not provided, the default time format is used. The default
-    * multi-scale time format chooses a human-readable representation based on the specified date as follows:
-    *
-    *   - `%Y` - for year boundaries, such as `2011`,
-    *   - `%B` - for month boundaries, such as `February`,
-    *   - `%b %d` - for week boundaries, such as `Feb 06`,
-    *   - `%a %d` - for day boundaries, such as `Mon 07`,
-    *   - `%I %p` - for hour boundaries, such as `01 AM`,
-    *   - `%I:%M` - for minute boundaries, such as `01:23`,
-    *   - `:%S` - for second boundaries, such as `:45`,
-    *   - `.%L` - milliseconds for all other times, such as `.012`.
-    *
-    * Although somewhat unusual, this default behavior has the benefit of providing both local and global context; for
-    * example, formatting a sequence of ticks as `[11 PM, Mon 07, 01 AM]` reveals information about hours, dates, and
-    * hours simultaneously, rather than just the hours `[11 PM, 12 AM, 01 AM]`.
-    *
-    * @param  specifier Format specifier to use.
-    * @return Time format function suitable for displaying a tick value.
-    */
-  def tickFormat(specifier: String = null): js.Function1[js.Date, String] = facade.tickFormat(specifier)
-
   override protected def copy(facade: Time.Facade[Range, Output]): Time[Range, Output] = {
     new Time(facade)
   }
 }
 
 object Time {
-  @js.native private[scale] trait Facade[Range, Output]
-      extends Scale.Facade[js.Date, Range, Output, Facade[Range, Output]] {
+  @js.native private[d3] trait Facade[Range, Output]
+      extends TickScale.Facade[js.Date, Range, Output, Tick, Facade[Range, Output]] {
     def domain(domain: js.Array[js.Date]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
     def rangeRound(range: js.Array[Double]): this.type = js.native
@@ -172,21 +98,19 @@ object Time {
     def clamp(): Boolean = js.native
     def interpolate(): InterpolatorFactory[Range, Output] = js.native
     def invert(value: Output): Double = js.native
-    def ticks[T: Time.TicksArgument](countsOrInternal: T = null): js.Array[js.Date] = js.native
-    def tickFormat(specifier: String = null): js.Function1[js.Date, String] = js.native
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Time] object Facade extends js.Object {
     def scaleTime[Range, Output](): Time.Facade[Range, Output] = js.native
     def scaleUTC[Range, Output](): Time.Facade[Range, Output] = js.native
   }
 
-  trait TicksArgument[T]
+  sealed trait Tick extends Any
 
-  object TicksArgument {
-    implicit val count   : TicksArgument[Double]       = new TicksArgument[Double] {}
-    implicit val interval: TicksArgument[TimeInterval] = new TicksArgument[TimeInterval] {}
+  object Tick {
+    implicit class IntTick(val count: Int) extends Tick
+    implicit class TimeIntervalTick(val interval: TimeInterval) extends Tick
   }
 
   trait API {

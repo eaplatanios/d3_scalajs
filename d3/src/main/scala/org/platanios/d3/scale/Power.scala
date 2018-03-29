@@ -27,7 +27,7 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Power[Range, Output] private[scale] (
+class Power[Range, Output] protected (
     override private[d3] val facade: Power.Facade[Range, Output]
 ) extends ContinuousNumeric[Range, Output, Power.Facade[Range, Output]] {
   /** Returns the exponent of this scale. */
@@ -39,7 +39,7 @@ class Power[Range, Output] private[scale] (
 }
 
 object Power {
-  @js.native private[scale] trait Facade[Range, Output]
+  @js.native private[d3] trait Facade[Range, Output]
       extends ContinuousNumeric.Facade[Range, Output, Facade[Range, Output]] {
     def interpolate[IO](interpolate: InterpolatorFactory[Range, IO]): Power.Facade[Range, IO] = js.native
     def exponent(exponent: Double): this.type = js.native
@@ -48,7 +48,7 @@ object Power {
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Power] object Facade extends js.Object {
     def scalePow[Range, Output](): Power.Facade[Range, Output] = js.native
   }
 

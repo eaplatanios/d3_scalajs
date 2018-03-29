@@ -46,7 +46,7 @@ import scala.scalajs.js
   * @author Emmanouil Antonios Platanios
   */
 object Scale {
-  @js.native trait Facade[Domain, Range, Output, F <: Facade[Domain, Range, Output, F]] extends js.Object {
+  @js.native private[d3] trait Facade[Domain, Range, Output, F <: Facade[Domain, Range, Output, F]] extends js.Object {
     def apply(x: Domain): Output = js.native
     def domain(): js.Array[Domain] = js.native
     def range(): js.Array[Range] = js.native

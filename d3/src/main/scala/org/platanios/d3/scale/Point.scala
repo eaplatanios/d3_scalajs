@@ -37,7 +37,7 @@ import scala.scalajs.js.annotation.JSImport
   *
   * @author Emmanouil Antonios Platanios
   */
-class Point[Domain] private[scale] (
+class Point[Domain] protected (
     override private[d3] val facade: Point.Facade[Domain]
 ) extends Scale[Domain, js.Tuple2[Double, Double], Double, Point.Facade[Domain]] {
   /** Returns `true` if the range is rounded. */
@@ -58,7 +58,7 @@ class Point[Domain] private[scale] (
 }
 
 object Point {
-  @js.native private[scale] trait Facade[Domain]
+  @js.native private[d3] trait Facade[Domain]
       extends Scale.Facade[Domain, js.Tuple2[Double, Double], Double, Facade[Domain]] {
     def domain(domain: js.Array[Domain]): this.type = js.native
     def range(range: js.Tuple2[Double, Double]): this.type = js.native
@@ -74,7 +74,7 @@ object Point {
   }
 
   @JSImport("d3-scale", JSImport.Namespace)
-  @js.native private[scale] object Facade extends js.Object {
+  @js.native private[Point] object Facade extends js.Object {
     def scalePoint[Domain](): Point.Facade[Domain] = js.native
   }
 
