@@ -47,7 +47,7 @@ import scala.scalajs.js
   * @author Emmanouil Antonios Platanios
   */
 trait ContinuousNumeric[Range, Output, F <: ContinuousNumeric.Facade[Range, Output, F]]
-    extends TickScale[Double, Range, Output, Int, F] {
+    extends Scale[Double, Range, Output, Int, F] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 
@@ -81,7 +81,7 @@ trait ContinuousNumeric[Range, Output, F <: ContinuousNumeric.Facade[Range, Outp
 
 object ContinuousNumeric {
   @js.native private[d3] trait Facade[Range, Output, F <: Facade[Range, Output, F]]
-      extends TickScale.Facade[Double, Range, Output, Int, F] {
+      extends Scale.Facade[Double, Range, Output, F] {
     def domain(domain: js.Array[Double]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
     def rangeRound(range: js.Array[Double]): this.type = js.native

@@ -27,7 +27,7 @@ import scala.scalajs.js.annotation.JSImport
 class Identity protected (
     override private[d3] val facade: Identity.Facade
 ) extends ContinuousNumeric[Double, Double, Identity.Facade] {
-  override protected def copy(facade: Identity.Facade): Identity = new Identity(facade)
+  override protected def withFacade(facade: Identity.Facade): Identity = new Identity(facade)
 }
 
 object Identity {

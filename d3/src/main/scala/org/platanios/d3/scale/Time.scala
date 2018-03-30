@@ -20,6 +20,7 @@ import org.platanios.d3.time.{CountableTimeInterval, TimeInterval}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
+import scala.scalajs.js.|
 
 /** Time scales are a variant of linear scales that have a temporal domain: domain values are coerced to
   * [dates](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date) rather than numbers, and invert
@@ -46,7 +47,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Time[Range, Output] protected (
     override private[d3] val facade: Time.Facade[Range, Output]
-) extends TickScale[js.Date, Range, Output, Time.Tick, Time.Facade[Range, Output]] {
+) extends Scale[js.Date, Range, Output, Int | TimeInterval, Time.Facade[Range, Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 
@@ -77,14 +78,14 @@ class Time[Range, Output] protected (
     */
   def invert(value: Output): Double = facade.invert(value)
 
-  override protected def copy(facade: Time.Facade[Range, Output]): Time[Range, Output] = {
+  override protected def withFacade(facade: Time.Facade[Range, Output]): Time[Range, Output] = {
     new Time(facade)
   }
 }
 
 object Time {
   @js.native private[d3] trait Facade[Range, Output]
-      extends TickScale.Facade[js.Date, Range, Output, Tick, Facade[Range, Output]] {
+      extends Scale.Facade[js.Date, Range, Output, Facade[Range, Output]] {
     def domain(domain: js.Array[js.Date]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
     def rangeRound(range: js.Array[Double]): this.type = js.native
@@ -104,13 +105,6 @@ object Time {
   @js.native private[Time] object Facade extends js.Object {
     def scaleTime[Range, Output](): Time.Facade[Range, Output] = js.native
     def scaleUTC[Range, Output](): Time.Facade[Range, Output] = js.native
-  }
-
-  sealed trait Tick extends Any
-
-  object Tick {
-    implicit class IntTick(val count: Int) extends Tick
-    implicit class TimeIntervalTick(val interval: TimeInterval) extends Tick
   }
 
   trait API {

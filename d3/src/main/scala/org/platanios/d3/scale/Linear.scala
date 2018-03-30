@@ -29,7 +29,7 @@ import scala.scalajs.js.annotation.JSImport
 class Linear[Range, Output] protected (
     override private[d3] val facade: Linear.Facade[Range, Output]
 ) extends ContinuousNumeric[Range, Output, Linear.Facade[Range, Output]] {
-  override protected def copy(facade: Linear.Facade[Range, Output]): Linear[Range, Output] = new Linear(facade)
+  override protected def withFacade(facade: Linear.Facade[Range, Output]): Linear[Range, Output] = new Linear(facade)
 }
 
 object Linear {

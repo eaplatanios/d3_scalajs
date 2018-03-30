@@ -48,7 +48,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Band[Domain] protected (
     override private[d3] val facade: Band.Facade[Domain]
-) extends Scale[Domain, js.Tuple2[Double, Double], Double, Band.Facade[Domain]] {
+) extends Scale[Domain, js.Tuple2[Double, Double], Double, Nothing, Band.Facade[Domain]] {
   /** Returns `true` if the range is rounded. */
   def rounded(): Boolean = facade.round()
 
@@ -70,7 +70,13 @@ class Band[Domain] protected (
   /** Returns the distance between the starts of adjacent points, which is always equal to zero. */
   def step(): Double = facade.step()
 
-  override protected def copy(facade: Band.Facade[Domain]): Band[Domain] = {
+  /** This scale does not support `ticks()`. */
+  override def ticks(tickArgument: Nothing): js.Array[Domain] = ???
+
+  /** This scale does not support `tickFormat()`. */
+  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Domain, String] = ???
+
+  override protected def withFacade(facade: Band.Facade[Domain]): Band[Domain] = {
     new Band(facade)
   }
 }

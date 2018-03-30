@@ -49,7 +49,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Quantize[Range] protected (
     override private[d3] val facade: Quantize.Facade[Range]
-) extends TickScale[Double, Range, Range, Int, Quantize.Facade[Range]] {
+) extends Scale[Double, Range, Range, Int, Quantize.Facade[Range]] {
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range: the inverse of
     * quantize. This method is useful for interaction, say to determine the value in the domain that corresponds to the
     * pixel location under the mouse.
@@ -68,14 +68,14 @@ class Quantize[Range] protected (
     */
   def invert(value: Range): js.Tuple2[Double, Double] = facade.invertExtent(value)
 
-  override protected def copy(facade: Quantize.Facade[Range]): Quantize[Range] = {
+  override protected def withFacade(facade: Quantize.Facade[Range]): Quantize[Range] = {
     new Quantize(facade)
   }
 }
 
 object Quantize {
   @js.native private[d3] trait Facade[Range]
-      extends TickScale.Facade[Double, Range, Range, Int, Facade[Range]] {
+      extends Scale.Facade[Double, Range, Range, Facade[Range]] {
     def domain(domain: js.Tuple2[Double, Double]): this.type = js.native
     def range(range: js.Array[Range]): this.type = js.native
     def nice(count: Int = -1): this.type = js.native

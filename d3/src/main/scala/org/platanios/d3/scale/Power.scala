@@ -33,7 +33,7 @@ class Power[Range, Output] protected (
   /** Returns the exponent of this scale. */
   def exponent(): Double = facade.exponent()
 
-  override protected def copy(facade: Power.Facade[Range, Output]): Power[Range, Output] = {
+  override protected def withFacade(facade: Power.Facade[Range, Output]): Power[Range, Output] = {
     new Power(facade)
   }
 }

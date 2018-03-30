@@ -32,11 +32,17 @@ import scala.scalajs.js.|
   */
 class Ordinal[Domain, Range] protected (
     override private[d3] val facade: Ordinal.Facade[Domain, Range]
-) extends Scale[Domain, Range, Range, Ordinal.Facade[Domain, Range]] {
+) extends Scale[Domain, Range, Range, Nothing, Ordinal.Facade[Domain, Range]] {
   /** Returns the value used for unknown input values. */
   def unknown(): Range | js.Any = facade.unknown()
 
-  override protected def copy(facade: Ordinal.Facade[Domain, Range]): Ordinal[Domain, Range] = {
+  /** This scale does not support `ticks()`. */
+  override def ticks(tickArgument: Nothing): js.Array[Domain] = ???
+
+  /** This scale does not support `tickFormat()`. */
+  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Domain, String] = ???
+
+  override protected def withFacade(facade: Ordinal.Facade[Domain, Range]): Ordinal[Domain, Range] = {
     new Ordinal(facade)
   }
 }

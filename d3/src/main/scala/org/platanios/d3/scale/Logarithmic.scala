@@ -48,7 +48,7 @@ class Logarithmic[Range, Output] protected (
   /** Returns the logarithm base of this scale. */
   def base(): Double = facade.base()
 
-  override protected def copy(facade: Logarithmic.Facade[Range, Output]): Logarithmic[Range, Output] = {
+  override protected def withFacade(facade: Logarithmic.Facade[Range, Output]): Logarithmic[Range, Output] = {
     new Logarithmic(facade)
   }
 }

@@ -26,14 +26,20 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Sequential[Output] protected (
     override private[d3] val facade: Sequential.Facade[Output]
-) extends Scale[Double, Double, Output, Sequential.Facade[Output]] {
+) extends Scale[Double, Double, Output, Nothing, Sequential.Facade[Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 
   /** Returns the interpolator used by this scale. */
   def interpolator(): js.Function1[Double, Output] = facade.interpolate()
 
-  override protected def copy(facade: Sequential.Facade[Output]): Sequential[Output] = {
+  /** This scale does not support `ticks()`. */
+  override def ticks(tickArgument: Nothing): js.Array[Double] = ???
+
+  /** This scale does not support `tickFormat()`. */
+  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Double, String] = ???
+
+  override protected def withFacade(facade: Sequential.Facade[Output]): Sequential[Output] = {
     new Sequential(facade)
   }
 }
