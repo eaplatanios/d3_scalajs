@@ -15,10 +15,11 @@
 
 package org.platanios
 
+import org.platanios.d3.interpolate.Interpolate
 import org.scalajs.dom
 
 import scalajs.js
-import scala.scalajs.js.annotation.JSBracketAccess
+import scala.scalajs.js.annotation.{JSBracketAccess, JSImport}
 
 package object d3 extends Implicits {
   /** Helper trait which covers argument types like NodeListOf[T] or HTMLCollectionOf[T]. */
@@ -85,7 +86,6 @@ package object d3 extends Implicits {
   // TODO: Re-organize the namespaces.
 
   implicit def d3toArray(d3: org.platanios.d3.d3.type): array.Array.type = array.Array
-  implicit def d3toAxis(d3: org.platanios.d3.d3.type): axis.Axis.type = axis.Axis
   implicit def d3toColor(d3: org.platanios.d3.d3.type): color.Color.type = color.Color
   implicit def d3toColorScheme(d3: org.platanios.d3.d3.type): color.ColorScheme.type = color.ColorScheme
   implicit def d3toDrag(d3: org.platanios.d3.d3.type): drag.Drag.type = drag.Drag
@@ -114,6 +114,16 @@ package object d3 extends Implicits {
 
   //region Type Traits
 
+  trait JsNumber[T]
+
+  object JsNumber {
+    implicit val byteJsNumber  : JsNumber[Byte]   = new JsNumber[Byte] {}
+    implicit val shortJsNumber : JsNumber[Short]  = new JsNumber[Short] {}
+    implicit val intJsNumber   : JsNumber[Int]    = new JsNumber[Int] {}
+    implicit val floatJsNumber : JsNumber[Float]  = new JsNumber[Float] {}
+    implicit val doubleJsNumber: JsNumber[Double] = new JsNumber[Double] {}
+  }
+
   /** Container element type used for mouse/touch functions. */
   trait ContainerElement[T]
 
@@ -124,4 +134,32 @@ package object d3 extends Implicits {
   }
 
   //endregion Type Traits
+
+  //region Facades
+
+  @JSImport("d3", JSImport.Namespace)
+  @js.native private object d3Facade extends js.Object {
+    val version: String = js.native
+  }
+
+  trait Facade[T, F <: js.Any] {
+    private[d3] val facade: F
+
+    protected def withFacade(facade: F): T
+  }
+
+  //endregion Facades
+
+  //region API
+
+  object d3 {
+    val version: String = d3Facade.version
+
+    val format: org.platanios.d3.format.Format.type = org.platanios.d3.format.Format
+
+    object axis extends org.platanios.d3.axis.API
+    object scale extends org.platanios.d3.scale.API
+  }
+
+  //endregion API
 }
