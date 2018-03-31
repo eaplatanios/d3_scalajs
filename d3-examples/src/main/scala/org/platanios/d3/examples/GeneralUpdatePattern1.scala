@@ -60,6 +60,6 @@ object GeneralUpdatePattern1 {
     update(alphabet)
 
     // Grab a random sample of letters from the alphabet, in alphabetical order.
-    d3.interval(_ => update(d3.shuffle(alphabet).jsSlice(0, Math.floor(Math.random() * 26).toInt).sort()), 1500)
+    d3.timer.interval(_ => update(d3.shuffle(alphabet).jsSlice(0, Math.floor(Math.random() * 26).toInt).sort()), 1500)
   }
 }

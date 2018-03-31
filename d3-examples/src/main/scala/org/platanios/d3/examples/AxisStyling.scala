@@ -50,7 +50,7 @@ object AxisStyling {
 
     val xAxis = d3.axis(
       position = d3.axis.Bottom,
-      scale = x).ticks(d3.timeYear)
+      scale = x).ticks(d3.time.year)
 
     val yAxis = d3.axis(
       position = d3.axis.Right,
