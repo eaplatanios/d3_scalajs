@@ -15,7 +15,7 @@
 
 package org.platanios.d3.scale
 
-import org.platanios.d3.interpolate.InterpolatorFactory
+import org.platanios.d3.interpolate.Interpolate.InterpolatorFactory
 import org.platanios.d3.time.{CountableTimeInterval, TimeInterval}
 
 import scala.scalajs.js

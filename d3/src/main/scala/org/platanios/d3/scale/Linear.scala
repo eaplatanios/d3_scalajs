@@ -15,7 +15,7 @@
 
 package org.platanios.d3.scale
 
-import org.platanios.d3.interpolate.InterpolatorFactory
+import org.platanios.d3.interpolate.Interpolate.InterpolatorFactory
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
