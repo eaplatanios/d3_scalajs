@@ -23,7 +23,8 @@ import org.scalajs.dom
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
 
-/**
+/** Example ported from [here](https://bl.ocks.org/mbostock/4062085).
+  *
   * @author Emmanouil Antonios Platanios
   */
 @JSExportTopLevel("PopulationPyramid") @JSExportAll
@@ -77,7 +78,7 @@ object PopulationPyramid {
       val groupedData = parsed
           .groupBy(d => d("year").toDouble)
           .mapValues(_.groupBy(d => d("year").toDouble - d("age").toDouble)
-              .mapValues(v => js.Array(v.map(_("people").toDouble): _*)))
+              .mapValues(v => js.Array(v.map(_ ("people").toDouble): _*)))
 
       // Add an axis to show the population values.
       svg.append("g")
@@ -152,6 +153,8 @@ object PopulationPyramid {
               .attr("y", (value: Double) => y(value))
               .attr("height", (value: Double) => height - y(value))
       }
+
+      ()
     })
   }
 }

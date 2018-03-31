@@ -168,7 +168,7 @@ import scala.scalajs.js.|
     * @param  step Step to use.
     * @return Resulting interval (non-countable).
     */
-  def every(step: Double): TimeInterval | Null = js.native
+  def every(step: Int): TimeInterval | Null = js.native
 
   /** Returns the number of interval boundaries after start (exclusive) and before or equal to end (inclusive). Note
     * that this behavior is slightly different than interval.range because its purpose is to return the zero-based

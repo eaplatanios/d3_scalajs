@@ -20,7 +20,8 @@ import org.platanios.d3._
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
 
-/**
+/** Example ported from [here](https://bl.ocks.org/mbostock/3808218).
+  *
   * @author Emmanouil Antonios Platanios
   */
 @JSExportTopLevel("GeneralUpdatePattern1") @JSExportAll

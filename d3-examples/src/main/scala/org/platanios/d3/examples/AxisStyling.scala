@@ -21,7 +21,8 @@ import org.scalajs.dom
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
 
-/**
+/** Example ported from [here](https://bl.ocks.org/mbostock/3371592).
+  *
   * @author Emmanouil Antonios Platanios
   */
 @JSExportTopLevel("AxisStyling") @JSExportAll

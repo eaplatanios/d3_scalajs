@@ -101,113 +101,113 @@ import scala.scalajs.js.annotation.{JSImport, JSName}
   ): CountableTimeInterval = js.native
 
   /** Milliseconds. The shortest available time unit. */
-  @JSName("Millisecond") val millisecond   : CountableTimeInterval = js.native
-                         val utcMillisecond: CountableTimeInterval = js.native
+  @JSName("timeMillisecond") val millisecond   : CountableTimeInterval = js.native
+                             val utcMillisecond: CountableTimeInterval = js.native
 
   /** Seconds (e.g., 01:23:45.0000 AM); 1,000 milliseconds. */
-  @JSName("Second") val second   : CountableTimeInterval = js.native
-                    val utcSecond: CountableTimeInterval = js.native
+  @JSName("timeSecond") val second   : CountableTimeInterval = js.native
+                        val utcSecond: CountableTimeInterval = js.native
 
   /** Minutes (e.g., 01:02:00 AM); 60 seconds. Note that ECMAScript
     * [ignores leap seconds](http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.1). */
-  @JSName("Minute") val minute   : CountableTimeInterval = js.native
-                    val utcMinute: CountableTimeInterval = js.native
+  @JSName("timeMinute") val minute   : CountableTimeInterval = js.native
+                        val utcMinute: CountableTimeInterval = js.native
 
   /** Hours (e.g., 01:00 AM); 60 minutes. Note that advancing time by one hour in local time can return the same hour
     * or skip an hour due to daylight saving. */
-  @JSName("Hour") val hour   : CountableTimeInterval = js.native
-                  val utcHour: CountableTimeInterval = js.native
+  @JSName("timeHour") val hour   : CountableTimeInterval = js.native
+                      val utcHour: CountableTimeInterval = js.native
 
   /** Days (e.g., February 7, 2012 at 12:00 AM); typically 24 hours. Days in local time may range from 23 to 25 hours
     * due to daylight saving. */
-  @JSName("Day") val day   : CountableTimeInterval = js.native
-                 val utcDay: CountableTimeInterval = js.native
+  @JSName("timeDay") val day   : CountableTimeInterval = js.native
+                     val utcDay: CountableTimeInterval = js.native
 
   /** Alias for `d3.time.sunday`; 7 days and typically 168 hours. Weeks in local time may range from 167 to 169 hours
     * due on daylight saving. */
-  @JSName("Week") val week   : CountableTimeInterval = js.native
-                  val utcWeek: CountableTimeInterval = js.native
+  @JSName("timeWeek") val week   : CountableTimeInterval = js.native
+                      val utcWeek: CountableTimeInterval = js.native
 
   /** Sunday-based weeks (e.g., February 5, 2012 at 12:00 AM). */
-  @JSName("Sunday") val sunday   : CountableTimeInterval = js.native
-                    val utcSunday: CountableTimeInterval = js.native
+  @JSName("timeSunday") val sunday   : CountableTimeInterval = js.native
+                        val utcSunday: CountableTimeInterval = js.native
 
   /** Monday-based weeks (e.g., February 6, 2012 at 12:00 AM). */
-  @JSName("Monday") val monday   : CountableTimeInterval = js.native
-                    val utcMonday: CountableTimeInterval = js.native
+  @JSName("timeMonday") val monday   : CountableTimeInterval = js.native
+                        val utcMonday: CountableTimeInterval = js.native
 
   /** Tuesday-based weeks (e.g., February 7, 2012 at 12:00 AM). */
-  @JSName("Tuesday") val tuesday   : CountableTimeInterval = js.native
-                     val utcTuesday: CountableTimeInterval = js.native
+  @JSName("timeTuesday") val tuesday   : CountableTimeInterval = js.native
+                         val utcTuesday: CountableTimeInterval = js.native
 
   /** Wednesday-based weeks (e.g., February 8, 2012 at 12:00 AM). */
-  @JSName("Wednesday") val wednesday   : CountableTimeInterval = js.native
-                       val utcWednesday: CountableTimeInterval = js.native
+  @JSName("timeWednesday") val wednesday   : CountableTimeInterval = js.native
+                           val utcWednesday: CountableTimeInterval = js.native
 
   /** Thursday-based weeks (e.g., February 9, 2012 at 12:00 AM). */
-  @JSName("Thursday") val thursday   : CountableTimeInterval = js.native
-                      val utcThursday: CountableTimeInterval = js.native
+  @JSName("timeThursday") val thursday   : CountableTimeInterval = js.native
+                          val utcThursday: CountableTimeInterval = js.native
 
   /** Friday-based weeks (e.g., February 10, 2012 at 12:00 AM). */
-  @JSName("Friday") val friday   : CountableTimeInterval = js.native
-                    val utcFriday: CountableTimeInterval = js.native
+  @JSName("timeFriday") val friday   : CountableTimeInterval = js.native
+                        val utcFriday: CountableTimeInterval = js.native
 
   /** Saturday-based weeks (e.g., February 11, 2012 at 12:00 AM). */
-  @JSName("Saturday") val saturday   : CountableTimeInterval = js.native
-                      val utcSaturday: CountableTimeInterval = js.native
+  @JSName("timeSaturday") val saturday   : CountableTimeInterval = js.native
+                          val utcSaturday: CountableTimeInterval = js.native
 
   /** Months (e.g., February 1, 2012 at 12:00 AM); ranges from 28 to 31 days. */
-  @JSName("Month") val month   : CountableTimeInterval = js.native
-                   val utcMonth: CountableTimeInterval = js.native
+  @JSName("timeMonth") val month   : CountableTimeInterval = js.native
+                       val utcMonth: CountableTimeInterval = js.native
 
   /** Years (e.g., January 1, 2012 at 12:00 AM); ranges from 365 to 366 days. */
-  @JSName("Year") val year   : CountableTimeInterval = js.native
-                  val utcYear: CountableTimeInterval = js.native
+  @JSName("timeYear") val year   : CountableTimeInterval = js.native
+                      val utcYear: CountableTimeInterval = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeMilliseconds(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeMilliseconds") def milliseconds(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeSeconds(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeSeconds") def seconds(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeMinutes(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeMinutes") def minutes(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeHours(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeHours") def hours(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeDays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeDays") def days(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeWeeks(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeWeeks") def weeks(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeSundays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeSundays") def sundays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeMondays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeMondays") def mondays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeTuesdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeTuesdays") def tuesdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeWednesdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeWednesdays") def wednesdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeThursdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeThursdays") def thursdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeFridays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeFridays") def fridays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeSaturdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeSaturdays") def saturdays(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeMonths(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeMonths") def months(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
-  def timeYears(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
+  @JSName("timeYears") def years(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native
 
   /** Alias for the corresponding `Interval.range()` method. */
   def utcMilliseconds(start: js.Date, stop: js.Date, step: Int = 1): js.Array[js.Date] = js.native

@@ -20,7 +20,10 @@ import org.platanios.d3._
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
 
-/**
+// TODO: General update pattern 3.
+
+/** Example ported from [here](https://bl.ocks.org/mbostock/3808221).
+  *
   * @author Emmanouil Antonios Platanios
   */
 @JSExportTopLevel("GeneralUpdatePattern2") @JSExportAll

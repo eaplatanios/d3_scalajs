@@ -93,9 +93,6 @@ package object d3 extends Implicits {
   implicit def d3toDSV(d3: org.platanios.d3.d3.type): data.DSV.type = data.DSV
   implicit def d3toFetch(d3: org.platanios.d3.d3.type): data.Fetch.type = data.Fetch
   implicit def d3toSelection(d3: org.platanios.d3.d3.type): selection.Selection.type = selection.Selection
-  implicit def d3toTime(d3: org.platanios.d3.d3.type): time.Time.type = time.Time
-  implicit def d3toTimer(d3: org.platanios.d3.d3.type): time.Timer.type = time.Timer
-  implicit def d3toInterpolate(d3: org.platanios.d3.d3.type): Interpolate.type = Interpolate
   implicit def d3toLocal(d3: org.platanios.d3.d3.type): Local.type = Local
   implicit def d3toNamespaces(d3: org.platanios.d3.d3.type): Namespaces.type = Namespaces
 
