@@ -41,13 +41,13 @@ import scala.scalajs.js.|
   *
   * For a valid value `y` in the range, `time(time.invert(y))` equals `y`, and similarly, for any valid value `x` in the
   * domain, `time.invert(time(x))` equals `x`. The `invert` method is useful for interaction, say to determine the value
-  * in the domain that corresponds to the pixel location under the mouse.
+  * in the domain that corresponds to the pixel location under tghe mouse.
   *
   * @author Emmanouil Antonios Platanios
   */
 class Time[Range, Output] protected (
     override private[d3] val facade: Time.Facade[Range, Output]
-) extends Scale[js.Date, Range, Output, Int | TimeInterval, Time.Facade[Range, Output]] {
+) extends Scale[js.Date, Range, Output, Int | TimeInterval, String, Time.Facade[Range, Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 

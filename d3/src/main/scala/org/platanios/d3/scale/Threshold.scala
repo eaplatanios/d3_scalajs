@@ -40,7 +40,7 @@ import scala.scalajs.js.|
   */
 class Threshold[Domain, Range] protected (
     override private[d3] val facade: Threshold.Facade[Domain, Range]
-) extends Scale[Domain, Range, Range, Nothing, Threshold.Facade[Domain, Range]] {
+) extends Scale[Domain, Range, Range, Nothing, Nothing, Threshold.Facade[Domain, Range]] {
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range, representing the
     * inverse mapping from range to domain. This method is useful for interaction, say to determine the value in the
     * domain that corresponds to the pixel location under the mouse. For example:
@@ -63,7 +63,7 @@ class Threshold[Domain, Range] protected (
   override def ticks(tickArgument: Nothing): js.Array[Domain] = ???
 
   /** This scale does not support `tickFormat()`. */
-  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Domain, String] = ???
+  override def tickFormat(tickArgument: Nothing, specifier: Nothing): js.Function1[Domain, String] = ???
 
   override protected def withFacade(facade: Threshold.Facade[Domain, Range]): Threshold[Domain, Range] = {
     new Threshold(facade)

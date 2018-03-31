@@ -15,6 +15,7 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.format.Format
 import org.platanios.d3.interpolate.InterpolatorFactory
 
 import scala.scalajs.js
@@ -47,7 +48,7 @@ import scala.scalajs.js
   * @author Emmanouil Antonios Platanios
   */
 trait ContinuousNumeric[Range, Output, F <: ContinuousNumeric.Facade[Range, Output, F]]
-    extends Scale[Double, Range, Output, Int, F] {
+    extends Scale[Double, Range, Output, Int, Format.NumberSpecifier, F] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 

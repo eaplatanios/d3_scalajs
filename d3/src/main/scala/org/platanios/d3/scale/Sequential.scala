@@ -26,7 +26,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Sequential[Output] protected (
     override private[d3] val facade: Sequential.Facade[Output]
-) extends Scale[Double, Double, Output, Nothing, Sequential.Facade[Output]] {
+) extends Scale[Double, Double, Output, Nothing, Nothing, Sequential.Facade[Output]] {
   /** Returns a boolean indicating whether clamping is enabled for this scale. */
   def clamped(): Boolean = facade.clamp()
 
@@ -37,7 +37,7 @@ class Sequential[Output] protected (
   override def ticks(tickArgument: Nothing): js.Array[Double] = ???
 
   /** This scale does not support `tickFormat()`. */
-  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Double, String] = ???
+  override def tickFormat(tickArgument: Nothing, specifier: Nothing): js.Function1[Double, String] = ???
 
   override protected def withFacade(facade: Sequential.Facade[Output]): Sequential[Output] = {
     new Sequential(facade)

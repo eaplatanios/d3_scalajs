@@ -48,7 +48,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Band[Domain] protected (
     override private[d3] val facade: Band.Facade[Domain]
-) extends Scale[Domain, js.Tuple2[Double, Double], Double, Nothing, Band.Facade[Domain]] {
+) extends Scale[Domain, js.Tuple2[Double, Double], Double, Nothing, Nothing, Band.Facade[Domain]] {
   /** Returns `true` if the range is rounded. */
   def rounded(): Boolean = facade.round()
 
@@ -74,7 +74,7 @@ class Band[Domain] protected (
   override def ticks(tickArgument: Nothing): js.Array[Domain] = ???
 
   /** This scale does not support `tickFormat()`. */
-  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Domain, String] = ???
+  override def tickFormat(tickArgument: Nothing, specifier: Nothing): js.Function1[Domain, String] = ???
 
   override protected def withFacade(facade: Band.Facade[Domain]): Band[Domain] = {
     new Band(facade)

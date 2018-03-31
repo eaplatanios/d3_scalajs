@@ -32,7 +32,7 @@ import scala.scalajs.js.|
   */
 class Ordinal[Domain, Range] protected (
     override private[d3] val facade: Ordinal.Facade[Domain, Range]
-) extends Scale[Domain, Range, Range, Nothing, Ordinal.Facade[Domain, Range]] {
+) extends Scale[Domain, Range, Range, Nothing, Nothing, Ordinal.Facade[Domain, Range]] {
   /** Returns the value used for unknown input values. */
   def unknown(): Range | js.Any = facade.unknown()
 
@@ -40,7 +40,7 @@ class Ordinal[Domain, Range] protected (
   override def ticks(tickArgument: Nothing): js.Array[Domain] = ???
 
   /** This scale does not support `tickFormat()`. */
-  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Domain, String] = ???
+  override def tickFormat(tickArgument: Nothing, specifier: Nothing): js.Function1[Domain, String] = ???
 
   override protected def withFacade(facade: Ordinal.Facade[Domain, Range]): Ordinal[Domain, Range] = {
     new Ordinal(facade)

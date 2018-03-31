@@ -57,8 +57,8 @@ object Scale {
   }
 }
 
-trait Scale[Domain, Range, Output, TickArg, F <: Scale.Facade[Domain, Range, Output, F]]
-    extends Facade[Scale[Domain, Range, Output, TickArg, F], F] {
+trait Scale[Domain, Range, Output, TickArg, TickFormatSpecifier, F <: Scale.Facade[Domain, Range, Output, F]]
+    extends Facade[Scale[Domain, Range, Output, TickArg, TickFormatSpecifier, F], F] {
   def apply(x: Domain): Output = facade.apply(x)
   def domain(): js.Array[Domain] = facade.domain()
   def range(): js.Array[Range] = facade.range()
@@ -137,10 +137,10 @@ trait Scale[Domain, Range, Output, TickArg, F <: Scale.Facade[Domain, Range, Out
     *   ticks.map(tickFormat) // ["-100%", "-50%", "+0%", "+50%", "+100%"]
     * }}}
     *
-    * If `specifier` uses the format type `s`, the scale will return an
+    * If `specifier` uses decimal notation with an SI prefix (i.e., format type `s`), the scale will return an
     * [SI-prefix format](https://github.com/d3/d3-format#locale_formatPrefix) based on the largest value in the domain.
     * If the specifier already specifies a precision, this method is equivalent to
-    * [`locale.format()`](https://github.com/d3/d3-format#locale_format).
+    * [`d3.format()`](https://github.com/d3/d3-format#locale_format).
     *
     * For time scales, this method returns a time format function suitable for displaying tick values. If a format
     * specifier is provided, this method is equivalent to `format`. If a specifier is not provided, the default time
@@ -164,10 +164,10 @@ trait Scale[Domain, Range, Output, TickArg, F <: Scale.Facade[Domain, Range, Out
     * @param  specifier    Format specifier to use.
     * @return Number format function suitable for displaying a tick value.
     */
-  def tickFormat(tickArgument: TickArg = ???, specifier: String = ???): js.Function1[Domain, String] = {
-    facade.tickFormat(tickArgument, specifier)
+  def tickFormat(tickArgument: TickArg = ???, specifier: TickFormatSpecifier = ???): js.Function1[Domain, String] = {
+    facade.tickFormat(tickArgument, specifier.toString)
   }
 
   /** Returns an exact copy of this scale. Changes to this scale will not affect the returned scale, and vice versa. */
-  def copy(): Scale[Domain, Range, Output, TickArg, F] = withFacade(facade.copy())
+  def copy(): Scale[Domain, Range, Output, TickArg, TickFormatSpecifier, F] = withFacade(facade.copy())
 }

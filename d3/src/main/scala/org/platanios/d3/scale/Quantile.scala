@@ -29,7 +29,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Quantile[Range] protected (
     override private[d3] val facade: Quantile.Facade[Range]
-) extends Scale[Double, Range, Range, Nothing, Quantile.Facade[Range]] {
+) extends Scale[Double, Range, Range, Nothing, Nothing, Quantile.Facade[Range]] {
   /** Returns the quantile thresholds. If the range contains `n` discrete values, the returned array will contain
     * `n - 1` thresholds. Values less than the first threshold are considered in the first quantile; values greater
     * than or equal to the first threshold but less than the second threshold are in the second quantile, and so on.
@@ -53,7 +53,7 @@ class Quantile[Range] protected (
   override def ticks(tickArgument: Nothing): js.Array[Double] = ???
 
   /** This scale does not support `tickFormat()`. */
-  override def tickFormat(tickArgument: Nothing, specifier: String): js.Function1[Double, String] = ???
+  override def tickFormat(tickArgument: Nothing, specifier: Nothing): js.Function1[Double, String] = ???
 
   override protected def withFacade(facade: Quantile.Facade[Range]): Quantile[Range] = {
     new Quantile(facade)

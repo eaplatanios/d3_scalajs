@@ -15,6 +15,8 @@
 
 package org.platanios.d3.scale
 
+import org.platanios.d3.format.Format
+
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 
@@ -49,7 +51,7 @@ import scala.scalajs.js.annotation.JSImport
   */
 class Quantize[Range] protected (
     override private[d3] val facade: Quantize.Facade[Range]
-) extends Scale[Double, Range, Range, Int, Quantize.Facade[Range]] {
+) extends Scale[Double, Range, Range, Int, Format.NumberSpecifier, Quantize.Facade[Range]] {
   /** Returns the extent of values in the domain `[x0, x1]` for the corresponding value in the range: the inverse of
     * quantize. This method is useful for interaction, say to determine the value in the domain that corresponds to the
     * pixel location under the mouse.
