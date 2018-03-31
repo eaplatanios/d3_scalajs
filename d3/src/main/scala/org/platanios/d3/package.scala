@@ -16,6 +16,7 @@
 package org.platanios
 
 import org.platanios.d3.interpolate.Interpolate
+
 import org.scalajs.dom
 
 import scalajs.js
@@ -155,9 +156,9 @@ package object d3 extends Implicits {
   object d3 {
     val version: String = d3Facade.version
 
+    val axis  : org.platanios.d3.axis.Axis.type     = org.platanios.d3.axis.Axis
     val format: org.platanios.d3.format.Format.type = org.platanios.d3.format.Format
 
-    object axis extends org.platanios.d3.axis.API
     object scale extends org.platanios.d3.scale.API
   }
 

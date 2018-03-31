@@ -66,9 +66,12 @@ object PopulationPyramid {
         domain = Seq(0.0, people1),
         range = Seq(height, 0.0))
 
-      val yAxis = d3.axisRight(y)
-          .tickSize(-width)
-          .tickFormat((d, _) => Math.round(d / 1e6) + "M")
+      val yAxis = d3.axis(
+        position = d3.axis.Right,
+        scale = y,
+        tickSizeInner = -width,
+        tickSizeOuter = -width,
+        tickFormat = (d: Double) => Math.round(d / 1e6) + "M")
 
       // Produce a map from year and birth year to male/female.
       val groupedData = parsed
