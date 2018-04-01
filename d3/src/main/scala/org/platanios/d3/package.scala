@@ -87,7 +87,6 @@ package object d3 extends Implicits {
   implicit def d3toArray(d3: org.platanios.d3.d3.type): array.Array.type = array.Array
   implicit def d3toDrag(d3: org.platanios.d3.d3.type): drag.Drag.type = drag.Drag
   implicit def d3toDSV(d3: org.platanios.d3.d3.type): data.DSV.type = data.DSV
-  implicit def d3toFetch(d3: org.platanios.d3.d3.type): data.Fetch.type = data.Fetch
   implicit def d3toSelection(d3: org.platanios.d3.d3.type): selection.Selection.type = selection.Selection
   implicit def d3toLocal(d3: org.platanios.d3.d3.type): Local.type = Local
   implicit def d3toNamespaces(d3: org.platanios.d3.d3.type): Namespaces.type = Namespaces
@@ -151,6 +150,7 @@ package object d3 extends Implicits {
 
     val axis       : org.platanios.d3.axis.Axis.type               = org.platanios.d3.axis.Axis
     val color      : org.platanios.d3.color.Color.type             = org.platanios.d3.color.Color
+    val fetch      : org.platanios.d3.data.Fetch.type              = org.platanios.d3.data.Fetch
     val format     : org.platanios.d3.format.Format.type           = org.platanios.d3.format.Format
     val interpolate: org.platanios.d3.interpolate.Interpolate.type = org.platanios.d3.interpolate.Interpolate
     val time       : org.platanios.d3.time.Time.type               = org.platanios.d3.time.Time

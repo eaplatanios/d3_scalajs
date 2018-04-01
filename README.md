@@ -28,7 +28,7 @@ accessible.
 - [ ] d3-drag
 - [ ] d3-dsv
 - [ ] d3-ease
-- [ ] d3-fetch
+- [x] d3-fetch
 - [ ] d3-force
 - [x] d3-format
 - [ ] d3-geo

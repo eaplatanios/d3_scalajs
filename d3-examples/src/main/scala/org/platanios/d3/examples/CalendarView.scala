@@ -17,6 +17,7 @@ package org.platanios.d3.examples
 
 import org.platanios.d3._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
 
@@ -86,7 +87,7 @@ object CalendarView {
               "H" + (w0 + 1) * cellSize + "Z"
         })
 
-    d3.csv("dji.csv").then[Unit](parsed => {
+    d3.fetch.csv("dji.csv").foreach(parsed => {
       val data = parsed.groupBy(_ ("Date")).map {
         case (k, v) => k -> (v(0)("Close").toDouble - v(0)("Open").toDouble) / v(0)("Open").toDouble
       }
@@ -95,8 +96,6 @@ object CalendarView {
           .attr("fill", (d: String) => color(data(d)))
           .append("title")
           .text((d: String) => d + ": " + formatPercent(data(d)))
-
-      ()
     })
   }
 }

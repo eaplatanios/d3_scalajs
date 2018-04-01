@@ -20,6 +20,7 @@ import org.platanios.d3.selection.Selection
 
 import org.scalajs.dom
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
 
@@ -51,7 +52,7 @@ object PopulationPyramid {
         .attr("dy", ".71em")
         .text("2000")
 
-    d3.csv("population.csv").then[Unit](parsed => {
+    d3.fetch.csv("population.csv").foreach(parsed => {
       // Compute the extent of the data set in people, age, and years.
       val people1 = parsed.map(d => d("people").toDouble).max
       val age1 = parsed.map(d => d("age").toDouble).max
@@ -153,8 +154,6 @@ object PopulationPyramid {
               .attr("y", (value: Double) => y(value))
               .attr("height", (value: Double) => height - y(value))
       }
-
-      ()
     })
   }
 }
