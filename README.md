@@ -26,7 +26,7 @@ accessible.
 - [ ] d3-contour
 - [ ] d3-dispatch
 - [ ] d3-drag
-- [ ] d3-dsv
+- [x] d3-dsv
 - [ ] d3-ease
 - [x] d3-fetch
 - [ ] d3-force

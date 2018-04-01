@@ -28,8 +28,6 @@ import scala.scalajs.js.annotation.JSImport
   * @author Emmanouil Antonios Platanios
   */
 object Fetch {
-  type RowFunction[T] = js.Function3[DSVRow[String], Int, js.Array[String], DSVRow[T]]
-
   /** Fetches the binary file at the specified input URL as a blob.
     *
     * @param  url  URL for the file.
@@ -153,8 +151,8 @@ object Fetch {
       delimiter: String,
       url: String,
       init: RequestInit = null,
-      row: RowFunction[T] = null
-  ): Future[DSVParsedArray[DSVRow[String]]] = (init, row) match {
+      row: DSV.RowFunction[T] = null
+  ): Future[DSV.ParsedArray[DSV.Row[String]]] = (init, row) match {
     case (null, null) => Facade.dsv[T](delimiter, url).toFuture
     case (i, null) => Facade.dsv[T](delimiter, url, init = i).toFuture
     case (null, r) => Facade.dsv[T](delimiter, url, row = r).toFuture
@@ -172,8 +170,8 @@ object Fetch {
   def csv[T](
       url: String,
       init: RequestInit = null,
-      row: RowFunction[T] = null
-  ): Future[DSVParsedArray[DSVRow[String]]] = (init, row) match {
+      row: DSV.RowFunction[T] = null
+  ): Future[DSV.ParsedArray[DSV.Row[String]]] = (init, row) match {
     case (null, null) => Facade.csv[T](url).toFuture
     case (i, null) => Facade.csv[T](url, init = i).toFuture
     case (null, r) => Facade.csv[T](url, row = r).toFuture
@@ -191,8 +189,8 @@ object Fetch {
   def tsv[T](
       url: String,
       init: RequestInit = null,
-      row: RowFunction[T] = null
-  ): Future[DSVParsedArray[DSVRow[String]]] = (init, row) match {
+      row: DSV.RowFunction[T] = null
+  ): Future[DSV.ParsedArray[DSV.Row[String]]] = (init, row) match {
     case (null, null) => Facade.tsv[T](url).toFuture
     case (i, null) => Facade.tsv[T](url, init = i).toFuture
     case (null, r) => Facade.tsv[T](url, row = r).toFuture
@@ -209,8 +207,8 @@ object Fetch {
     def svg(url: String, init: RequestInit = null): js.Promise[dom.svg.Element] = js.native
     def text(url: String, init: RequestInit = null): js.Promise[String] = js.native
     def xml(url: String, init: RequestInit = null): js.Promise[dom.Document] = js.native
-    def dsv[T](delimiter: String, url: String, init: RequestInit = null, row: RowFunction[T] = null): js.Promise[DSVParsedArray[DSVRow[String]]] = js.native
-    def csv[T](url: String, init: RequestInit = null, row: RowFunction[T] = null): js.Promise[DSVParsedArray[DSVRow[String]]] = js.native
-    def tsv[T](url: String, init: RequestInit = null, row: RowFunction[T] = null): js.Promise[DSVParsedArray[DSVRow[String]]] = js.native
+    def dsv[T](delimiter: String, url: String, init: RequestInit = null, row: DSV.RowFunction[T] = null): js.Promise[DSV.ParsedArray[DSV.Row[String]]] = js.native
+    def csv[T](url: String, init: RequestInit = null, row: DSV.RowFunction[T] = null): js.Promise[DSV.ParsedArray[DSV.Row[String]]] = js.native
+    def tsv[T](url: String, init: RequestInit = null, row: DSV.RowFunction[T] = null): js.Promise[DSV.ParsedArray[DSV.Row[String]]] = js.native
   }
 }
