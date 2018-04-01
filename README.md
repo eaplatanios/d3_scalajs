@@ -40,8 +40,7 @@ accessible.
 - [ ] d3-polygon
 - [ ] d3-quadtree
 - [ ] d3-queue
-- [ ] d3-random
-- [ ] d3-request
+- [x] d3-random
 - [ ] d3-sankey
 - [x] d3-scale-chromatic
 - [x] d3-scale

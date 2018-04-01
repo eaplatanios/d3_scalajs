@@ -153,6 +153,7 @@ package object d3 extends Implicits {
     val fetch      : org.platanios.d3.data.Fetch.type              = org.platanios.d3.data.Fetch
     val format     : org.platanios.d3.format.Format.type           = org.platanios.d3.format.Format
     val interpolate: org.platanios.d3.interpolate.Interpolate.type = org.platanios.d3.interpolate.Interpolate
+    val random     : org.platanios.d3.random.Random.type           = org.platanios.d3.random.Random
     val time       : org.platanios.d3.time.Time.type               = org.platanios.d3.time.Time
     val timer      : org.platanios.d3.time.Timer.type              = org.platanios.d3.time.Timer
 
