@@ -87,7 +87,7 @@ object Interpolate {
       */
     def gamma(gamma: Double): ColorGammaInterpolatorFactory = js.native
 
-    def apply(a: String | Color, b: String | Color): CopyInterpolator[String] = js.native
+    def apply(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
   }
 
   /** Returns an interpolator between the two numbers `a` and `b`. The returned interpolator is equivalent to:
@@ -306,7 +306,7 @@ object Interpolate {
     * @param  colors Array of colors to use.
     * @return Interpolating function.
     */
-  def rgbBasis(colors: js.Array[String | Color]): CopyInterpolator[String] = {
+  def rgbBasis(colors: js.Array[String | Color[_, _]]): CopyInterpolator[String] = {
     Facade.interpolateRgbBasis(colors)
   }
 
@@ -317,7 +317,7 @@ object Interpolate {
     * @param  colors Array of colors to use.
     * @return Interpolating function.
     */
-  def rgbBasisClosed(colors: js.Array[String | Color]): CopyInterpolator[String] = {
+  def rgbBasisClosed(colors: js.Array[String | Color[_, _]]): CopyInterpolator[String] = {
     Facade.interpolateRgbBasisClosed(colors)
   }
 
@@ -333,7 +333,7 @@ object Interpolate {
     * @param  b Second color.
     * @return Interpolating function.
     */
-  def hsl(a: String | Color, b: String | Color): CopyInterpolator[String] = {
+  def hsl(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
     Facade.interpolateHsl(a, b)
   }
 
@@ -346,7 +346,7 @@ object Interpolate {
     * @param  b Second color.
     * @return Interpolating function.
     */
-  def hslLong(a: String | Color, b: String | Color): CopyInterpolator[String] = {
+  def hslLong(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
     Facade.interpolateHslLong(a, b)
   }
 
@@ -360,7 +360,7 @@ object Interpolate {
     * @param  b Second color.
     * @return Interpolating function.
     */
-  def lab(a: String | Color, b: String | Color): CopyInterpolator[String] = {
+  def lab(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
     Facade.interpolateLab(a, b)
   }
 
@@ -376,7 +376,7 @@ object Interpolate {
     * @param  b Second color.
     * @return Interpolating function.
     */
-  def hcl(a: String | Color, b: String | Color): CopyInterpolator[String] = {
+  def hcl(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
     Facade.interpolateHcl(a, b)
   }
 
@@ -389,7 +389,7 @@ object Interpolate {
     * @param  b Second color.
     * @return Interpolating function.
     */
-  def hclLong(a: String | Color, b: String | Color): CopyInterpolator[String] = {
+  def hclLong(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
     Facade.interpolateHclLong(a, b)
   }
 
@@ -490,9 +490,9 @@ object Interpolate {
       }
     }
 
-    implicit val colorSupported: Supported[Color, String, CopyInterpolator[String]] = {
-      new Supported[Color, String, CopyInterpolator[String]] {
-        override def interpolate: (Color, Color) => CopyInterpolator[String] = (a, b) => rgb.apply(a, b)
+    implicit def colorSupported[C <: Color[C, _]]: Supported[C, String, CopyInterpolator[String]] = {
+      new Supported[C, String, CopyInterpolator[String]] {
+        override def interpolate: (C, C) => CopyInterpolator[String] = (a, b) => rgb.apply(a, b)
       }
     }
 
@@ -548,13 +548,13 @@ object Interpolate {
 
     val interpolateRgb: ColorGammaInterpolatorFactory = js.native
 
-    def interpolateRgbBasis(colors: js.Array[String | Color]): CopyInterpolator[String] = js.native
-    def interpolateRgbBasisClosed(colors: js.Array[String | Color]): CopyInterpolator[String] = js.native
-    def interpolateHsl(a: String | Color, b: String | Color): CopyInterpolator[String] = js.native
-    def interpolateHslLong(a: String | Color, b: String | Color): CopyInterpolator[String] = js.native
-    def interpolateLab(a: String | Color, b: String | Color): CopyInterpolator[String] = js.native
-    def interpolateHcl(a: String | Color, b: String | Color): CopyInterpolator[String] = js.native
-    def interpolateHclLong(a: String | Color, b: String | Color): CopyInterpolator[String] = js.native
+    def interpolateRgbBasis(colors: js.Array[String | Color[_, _]]): CopyInterpolator[String] = js.native
+    def interpolateRgbBasisClosed(colors: js.Array[String | Color[_, _]]): CopyInterpolator[String] = js.native
+    def interpolateHsl(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
+    def interpolateHslLong(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
+    def interpolateLab(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
+    def interpolateHcl(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
+    def interpolateHclLong(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
 
     val interpolateCubehelix    : ColorGammaInterpolatorFactory = js.native
     val interpolateCubehelixLong: ColorGammaInterpolatorFactory = js.native
