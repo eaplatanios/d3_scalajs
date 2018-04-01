@@ -129,6 +129,16 @@ object Color {
     */
   val cubehelix: CubehelixFactory = new CubehelixFactory(Facade.cubehelix)
 
+  /** Constructs a new [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color. The channel values are exposed as `h`,
+    * `s`, and `v` properties on the returned instance.
+    *
+    * If `h`, `s`, and `v` are specified, these represent the channel values of the returned color. An opacity may also
+    * be specified. If a CSS Color Module Level 3 specifier string is specified, it is parsed and then converted to the
+    * HSV color space. If a color instance is specified, it is converted to the RGB color space using `Color.rgb()` and
+    * then converted to HSV space.
+    */
+  val hsv: HSVFactory = new HSVFactory(HSVFacade.hsv)
+
   @JSImport("d3-color", JSImport.Namespace)
   @js.native private[color] object Facade extends js.Object {
     def color[C <: Color[C, _]]: Factory.Facade[C]       = js.native
@@ -145,6 +155,11 @@ object Color {
     def darker(k: Double = 1): F = js.native
     def rgb(): RGB.Facade = js.native
     override def toString: String = js.native
+  }
+
+  @JSImport("d3-hsv", JSImport.Namespace)
+  @js.native private[color] object HSVFacade extends js.Object {
+    val hsv: HSVFactory.Facade = js.native
   }
 
   object Factory {
@@ -380,6 +395,50 @@ object Color {
     override def apply(cssColorSpecifier: String): Cubehelix = facade(cssColorSpecifier)
     override def apply[F <: Color.Facade[F]](color: Color[_, F]): Cubehelix = facade(color.facade)
   }
+
+  class HSV private[color](
+      override private[d3] val facade: HSV.Facade
+  ) extends Color[HSV, HSV.Facade] {
+    val h: Double = facade.h
+    val s: Double = facade.s
+    val v: Double = facade.v
+
+    /** Returns the color's opacity, typically in the range `[0, 1]`. */
+    val opacity: Double = facade.opacity
+
+    def copy(h: Double = h, s: Double = s, v: Double = v, opacity: Double = opacity): HSV = {
+      Color.hsv(h, s, v, opacity)
+    }
+
+    override protected def withFacade(facade: HSV.Facade): HSV = new HSV(facade)
+  }
+
+  object HSV {
+    @js.native private[color] trait Facade extends Color.Facade[Facade] {
+      val h      : Double = js.native
+      val s      : Double = js.native
+      val v      : Double = js.native
+      val opacity: Double = js.native
+    }
+  }
+
+  object HSVFactory {
+    @js.native private[color] trait Facade extends Factory.Facade[HSV] {
+      def apply(h: Double, s: Double, v: Double, opacity: Double = 1.0): HSV = js.native
+
+      override def apply(cssColorSpecifier: String): HSV = js.native
+      override def apply(color: Color.Facade[_]): HSV = js.native
+    }
+  }
+
+  class HSVFactory private[color] (
+      override private[d3] val facade: HSVFactory.Facade
+  ) extends Factory[HSV](facade) {
+    def apply(h: Double, s: Double, v: Double, opacity: Double = 1.0): HSV = facade(h, s, v, opacity)
+
+    override def apply(cssColorSpecifier: String): HSV = facade(cssColorSpecifier)
+    override def apply[F <: Color.Facade[F]](color: Color[_, F]): HSV = facade(color.facade)
+  }
 }
 
 trait Color[C <: Color[C, F], F <: Color.Facade[F]] extends Facade[C, F] {
@@ -415,6 +474,9 @@ trait Color[C <: Color[C, F], F <: Color.Facade[F]] extends Facade[C, F] {
 
   /** Returns the Cubehelix equivalent of this color. */
   def cubehelix(): Color.Cubehelix = Color.cubehelix(this)
+
+  /** Returns the HSV equivalent of this color. */
+  def hsv(): Color.HSV = Color.hsv(this)
 
   /** Returns a string representing this color according to the
     * [CSS Object Model specification](https://drafts.csswg.org/cssom/#serialize-a-css-component-value),

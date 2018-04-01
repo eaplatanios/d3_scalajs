@@ -34,7 +34,7 @@ accessible.
 - [ ] d3-geo
 - [ ] d3-hexbin
 - [ ] d3-hierarchy
-- [ ] d3-hsv
+- [x] d3-hsv
 - [x] d3-interpolate
 - [ ] d3-path
 - [ ] d3-polygon

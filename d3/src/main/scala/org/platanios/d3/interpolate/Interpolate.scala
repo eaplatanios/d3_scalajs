@@ -415,6 +415,29 @@ object Interpolate {
     */
   val cubehelixLong: ColorGammaInterpolatorFactory = Facade.interpolateCubehelixLong
 
+  /** Returns an HSV color space interpolator between the two colors `a` and `b`. The colors `a` and `b` need not be in
+    * HSV. They will be converted to HSV using `d3.color.hcl`. If either color's hue or chroma is `NaN`, the opposing
+    * color's channel value is used. The shortest path between hues is used. The return value of the interpolator is an
+    * RGB string.
+    *
+    * @param  a First color.
+    * @param  b Second color.
+    * @return Interpolating function.
+    */
+  def hsv(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
+    HSVFacade.interpolateHsv(a, b)
+  }
+
+  /** Like `hsv()`, but does not use the shortest path between hues.
+    *
+    * @param  a First color.
+    * @param  b Second color.
+    * @return Interpolating function.
+    */
+  def hsvLong(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = {
+    HSVFacade.interpolateHsvLong(a, b)
+  }
+
   /** Returns a uniform non-rational B-spline interpolator through the specified array of values, which must be numbers.
     * Implicit control points are generated such that the interpolator returns `values(0)` at `t = 0` and
     * `values(values.length - 1)` at `t = 1`.
@@ -561,5 +584,11 @@ object Interpolate {
 
     def interpolateBasis(basis: js.Array[Double]): CopyInterpolator[Double] = js.native
     def interpolateBasisClosed(basis: js.Array[Double]): CopyInterpolator[Double] = js.native
+  }
+
+  @JSImport("d3-hsv", JSImport.Namespace)
+  @js.native private[Interpolate] object HSVFacade extends js.Object {
+    def interpolateHsv(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
+    def interpolateHsvLong(a: String | Color[_, _], b: String | Color[_, _]): CopyInterpolator[String] = js.native
   }
 }

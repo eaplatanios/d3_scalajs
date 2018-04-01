@@ -94,7 +94,9 @@ lazy val d3 = (project in file("./d3"))
       libraryDependencies ++= Seq(
         "org.scala-js" %%% "scalajs-dom" % "0.9.5",
         "com.lihaoyi"  %%% "scalatags"   % "0.6.7"),
-      npmDependencies in Compile += "d3" -> "5.0.0",
+      npmDependencies in Compile ++= Seq(
+        "d3" -> "5.0.0",
+        "d3-hsv" -> "0.1.0"),
       skip in packageJSDependencies := false,
       webpackBundlingMode := BundlingMode.LibraryOnly())
 
