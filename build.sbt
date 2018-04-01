@@ -17,7 +17,7 @@ import ReleaseTransformations._
 import sbtrelease.Vcs
 
 scalaVersion in ThisBuild := "2.12.4"
-crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.4")
+crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.4")
 
 organization in ThisBuild := "org.platanios"
 
@@ -73,6 +73,7 @@ lazy val all = (project in file("."))
     .aggregate(d3, d3Examples)
     .dependsOn(d3, d3Examples)
     .settings(moduleName := "d3", name := "D3 Scala")
+    .enablePlugins(ScalaUnidocPlugin)
     .settings(publishSettings)
     .settings(
       sourcesInBase := false,
