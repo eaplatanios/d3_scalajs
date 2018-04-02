@@ -68,9 +68,9 @@ import scala.scalajs.js.|
   *
   * @author Emmanouil Antonios Platanios
   */
-class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
+class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protected (
     private[d3] val facade: Selection.Facade[E, D, PE, PD]
-) extends Facade[Selection[E, D, PE, PD], Selection.Facade[E, D, PE, PD]] {
+) {
   //region Selecting Elements
 
   /** Returns the `index`-th group in this selection. */
@@ -227,8 +227,8 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
     *             previously set and known datum type.
     * @return Selection.
     */
-  def selectAll[DE <: dom.EventTarget, DED](
-      selector: D3Function[E, D, js.Array[E] | ArrayLike[DE]]
+  def selectAll[DE >: E <: dom.EventTarget, DED](
+      selector: D3Function[E, D, js.Array[DE] | ArrayLike[DE]]
   ): Selection[DE, DED, E, D] = {
     new Selection(facade.selectAll(selector))
   }
@@ -314,7 +314,9 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
     * @param  other Selection to merge with.
     * @return Merged selection.
     */
-  def merge[ME <: E, MD <: D, MPE <: PE, MPD <: PD](other: Selection[ME, MD, MPE, MPD]): Selection[E, D, PE, PD] = {
+  def merge[ME >: E <: dom.EventTarget, MD >: D, MPE >: PE <: dom.EventTarget, MPD >: PD](
+      other: Selection[ME, MD, MPE, MPD]
+  ): Selection[E, D, PE, PD] = {
     new Selection(facade.merge(other.facade))
   }
 
@@ -725,7 +727,7 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
     * @param  before Selector function returning a selector specifying before which element to insert `value`.
     * @return Selection after the modification is applied.
     */
-  def insert(value: String, before: D3Function[E, D, E]): Selection[E, D, PE, PD] = {
+  def insert[SE >: E <: dom.EventTarget](value: String, before: D3Function[E, D, SE]): Selection[E, D, PE, PD] = {
     new Selection(facade.insert(value, before))
   }
 
@@ -804,9 +806,9 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
     * @param  before Selector function returning a selector specifying before which element to insert `value`.
     * @return Selection after the modification is applied.
     */
-  def insert[ChildE <: dom.EventTarget](
+  def insert[SE >: E <: dom.EventTarget, ChildE <: dom.EventTarget](
       value: D3Function[E, D, ChildE],
-      before: D3Function[E, D, E]
+      before: D3Function[E, D, SE]
   ): Selection[ChildE, D, PE, PD] = {
     new Selection(facade.insert(value, before))
   }
@@ -1137,7 +1139,7 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
     * @return Currently-assigned listener for the specified event typename on the first (non-`null`) selected element,
     *         if any.
     */
-  def on(domTypeNames: String): D3Function[E, D, Unit] = {
+  def on[SE >: E <: dom.EventTarget, SD >: D](domTypeNames: String): D3Function[SE, SD, Unit] = {
     facade.on(domTypeNames)
   }
 
@@ -1257,15 +1259,17 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
     * @param  function Function to call.
     * @return This selection.
     */
-   def call(function: (Selection[dom.Element, js.Any, dom.Element, js.Any]) => _): Selection[E, D, PE, PD] = {
-     new Selection(facade.call((f: Selection.Facade[dom.Element, js.Any, dom.Element, js.Any]) => function(new Selection(f))))
+   def call[SE >: E <: dom.EventTarget, SD >: E, SPE >: PE <: dom.EventTarget, SPD >: PD](
+       function: (Selection[SE, SD, SPE, SPD]) => _
+   ): Selection[E, D, PE, PD] = {
+     new Selection(facade.call((f: Selection.Facade[SE, SD, SPE, SPD]) => function(new Selection[SE, SD, SPE, SPD](f))))
    }
 
   /** Returns `true` if this selection contains no (non-null) elements. */
   def empty(): Boolean = facade.empty()
 
   /** Returns an array of all (non-null) elements in this selection. */
-  def nodes(): Seq[E] = facade.nodes().toSeq
+  def nodes[SE >: E <: dom.EventTarget](): Seq[SE] = facade.nodes().toSeq
 
   /** Returns the first (non-null) element in this selection. If the selection is empty, returns `null`. */
   def node(): E = facade.node()
@@ -1279,29 +1283,31 @@ class Selection[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] protected (
 
   // TODO: !!! Transitions.
 
-  def interrupt(name: String = null): Transition[E, D, PE, PD] = {
+  def interrupt[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
+      name: String = null
+  ): Transition[SE, SD, SPE, SPD] = {
     if (name != null)
       facade.interrupt(name)
     else
       facade.interrupt()
   }
 
-  def transition(name: String = null): Transition[E, D, PE, PD] = {
+  def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
+      name: String = null
+  ): Transition[SE, SD, SPE, SPD] = {
     if (name != null)
       facade.transition(name)
     else
       facade.transition()
   }
 
-  def transition(transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]): Transition[E, D, PE, PD] = {
+  def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
+      transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]
+  ): Transition[SE, SD, SPE, SPD] = {
     facade.transition(transition)
   }
 
   //endregion Transitions
-
-  override protected def withFacade(facade: Selection.Facade[E, D, PE, PD]): Selection[E, D, PE, PD] = {
-    new Selection(facade)
-  }
 }
 
 object Selection {
@@ -1562,7 +1568,7 @@ object Selection {
     def creator[E <: dom.EventTarget](name: String): js.Function1[dom.EventTarget, E] = js.native
   }
 
-  @js.native private[d3] trait Facade[E <: dom.EventTarget, D, PE <: dom.EventTarget, PD] extends js.Object {
+  @js.native private[d3] trait Facade[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] extends js.Object {
     @JSBracketAccess def apply(index: Index): Group = js.native
     @JSBracketAccess def update(index: Index, value: Group): Unit = js.native
 
@@ -1573,10 +1579,10 @@ object Selection {
     def selectAll(selector: Null): Facade[Null, Unit, E, D] = js.native
     def selectAll(selector: Unit): Facade[Null, Unit, E, D] = js.native
     def selectAll[DE <: dom.EventTarget, DED](selector: String): Facade[DE, DED, E, D] = js.native
-    def selectAll[DE <: dom.EventTarget, DED](selector: D3Function[E, D, js.Array[E] | ArrayLike[DE]]): Facade[DE, DED, E, D] = js.native
+    def selectAll[DE >: E <: dom.EventTarget, DED](selector: D3Function[E, D, js.Array[DE] | ArrayLike[DE]]): Facade[DE, DED, E, D] = js.native
     def filter(selector: String): Facade[E, D, PE, PD] = js.native
     def filter(selector: D3Function[E, D, Boolean]): Facade[E, D, PE, PD] = js.native
-    def merge[ME <: E, MD <: D, MPE <: PE, MPD <: PD](other: Facade[ME, MD, MPE, MPD]): Facade[E, D, PE, PD] = js.native
+    def merge[ME >: E <: dom.EventTarget, MD >: D, MPE >: PE <: dom.EventTarget, MPD >: PD](other: Facade[ME, MD, MPE, MPD]): Facade[E, D, PE, PD] = js.native
 
     def attr(name: String): String = js.native
     def attr[T](name: String, value: D3Function[E, D, T])(implicit ev: T => D3AttrValue): Facade[E, D, PE, PD] = js.native
@@ -1597,9 +1603,9 @@ object Selection {
     def insert(value: String): Facade[E, D, PE, PD] = js.native
     def insert[ChildE <: dom.EventTarget](value: D3Function[E, D, ChildE]): Facade[ChildE, D, PE, PD] = js.native
     def insert(value: String, before: String): Facade[E, D, PE, PD] = js.native
-    def insert(value: String, before: D3Function[E, D, E]): Facade[E, D, PE, PD] = js.native
+    def insert[SE >: E <: dom.EventTarget](value: String, before: D3Function[E, D, SE]): Facade[E, D, PE, PD] = js.native
     def insert[ChildE <: dom.EventTarget](value: D3Function[E, D, ChildE], before: String): Facade[ChildE, D, PE, PD] = js.native
-    def insert[ChildE <: dom.EventTarget](value: D3Function[E, D, ChildE], before: D3Function[E, D, E]): Facade[ChildE, D, PE, PD] = js.native
+    def insert[SE >: E <: dom.EventTarget, ChildE <: dom.EventTarget](value: D3Function[E, D, ChildE], before: D3Function[E, D, SE]): Facade[ChildE, D, PE, PD] = js.native
     def remove(): Facade[E, D, PE, PD] = js.native
     def clone(deep: Boolean = false): Facade[E, D, PE, PD] = js.native
     def sort(comparator: js.Function2[D, D, Double] = null): Facade[E, D, PE, PD] = js.native
@@ -1607,31 +1613,29 @@ object Selection {
     def raise(): Facade[E, D, PE, PD] = js.native
     def lower(): Facade[E, D, PE, PD] = js.native
 
-    def data(): js.Array[D] = js.native
+    def data[SD >: D](): js.Array[SD] = js.native
     def data[ND](data: D3Function[E, D, js.Array[ND]], key: D3Function[E, ND, String] = null): Facade[E, ND, PE, PD] = js.native
     def enter(): Facade[E, D, PE, PD] = js.native
     def exit[OldD](): Facade[E, OldD, PE, PD] = js.native
     def datum(): D = js.native
     def datum[ND](value: D3Function[E, D, ND]): Facade[E, ND, PE, PD] = js.native
 
-    def on(domTypeNames: String): D3Function[E, D, Unit] = js.native
+    def on[SE >: E <: dom.EventTarget, SD >: D](domTypeNames: String): D3Function[SE, SD, Unit] = js.native
     def on(domTypeNames: String, listener: D3Function[E, D, Unit], capture: Boolean = false): Facade[E, D, PE, PD] = js.native
     def dispatch(value: String, parameters: D3Function[E, D, CustomEventParameters] = null): Facade[E, D, PE, PD] = js.native
 
     def each(func: D3Function[E, D, Unit]): Facade[E, D, PE, PD] = js.native
-    def call(func: js.Function, args: js.Any*): Facade[E, D, PE, PD] = js.native
-    // TODO: !!!
-    // def call(function: js.Function1[Facade[E, D, PE, PD], _]): Facade[E, D, PE, PD] = js.native
+    def call[SE >: E <: dom.EventTarget, SD >: E, SPE >: PE <: dom.EventTarget, SPD >: PD](function: js.Function1[Facade[SE, SD, SPE, SPD], _]): Facade[E, D, PE, PD] = js.native
     def empty(): Boolean = js.native
-    def nodes(): js.Array[E] = js.native
+    def nodes[SE >: E <: dom.EventTarget](): js.Array[SE] = js.native
     def node(): E = js.native
     def size(): Int = js.native
 
     //region Transitions
 
-    def interrupt(name: String = null): Transition[E, D, PE, PD] = js.native
-    def transition(name: String = null): Transition[E, D, PE, PD] = js.native
-    def transition(transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]): Transition[E, D, PE, PD] = js.native
+    def interrupt[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](name: String = null): Transition[SE, SD, SPE, SPD] = js.native
+    def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](name: String = null): Transition[SE, SD, SPE, SPD] = js.native
+    def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]): Transition[SE, SD, SPE, SPD] = js.native
 
     //endregion Transitions
   }
