@@ -68,22 +68,26 @@ object AxisStyling {
 
     g.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => xAxis(g))
-        .call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => {
+        //.call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => xAxis(g))
+        .call((g: selection.Selection[dom.Element, js.Any, dom.Element, js.Any]) => xAxis(g))
+        //.call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => {
+        .call((g: selection.Selection[dom.Element, js.Any, dom.Element, js.Any]) => {
           g.select(".domain").remove()
         })
 
     g.append("g")
-        .call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => yAxis(g))
-        .call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => {
-          g.select(".domain").remove()
-          g.selectAll(".tick:not(:first-of-type) line")
-              .attr("stroke", "#777")
-              .attr("stroke-dasharray", "2,2")
-          g.selectAll(".tick text")
-              .attr("x", 4)
-              .attr("dy", -4)
-          g
-        })
+        //.call((g: selection.Selection[dom.svg.G, _, _, _]) => yAxis(g))
+        .call((g: selection.Selection[dom.Element, js.Any, dom.Element, js.Any]) => yAxis(g))
+        //.call((g: selection.Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => {
+        .call((g: selection.Selection[dom.Element, js.Any, dom.Element, js.Any]) => {
+      g.select(".domain").remove()
+      g.selectAll(".tick:not(:first-of-type) line")
+          .attr("stroke", "#777")
+          .attr("stroke-dasharray", "2,2")
+      g.selectAll(".tick text")
+          .attr("x", 4)
+          .attr("dy", -4)
+      g
+    })
   }
 }

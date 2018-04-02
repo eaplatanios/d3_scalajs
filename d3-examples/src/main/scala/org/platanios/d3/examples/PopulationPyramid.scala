@@ -85,7 +85,8 @@ object PopulationPyramid {
       svg.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(" + width + ",0)")
-          .call((d: Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => yAxis(d))
+          //.call((d: Selection[dom.svg.G, js.Any, dom.Element, js.Any]) => yAxis(d))
+          .call((d: Selection[dom.Element, js.Any, dom.Element, js.Any]) => yAxis(d))
           .selectAll("g")
           .filter((v: Double) => v == 0.0)
           .classed("zero", true)
@@ -127,7 +128,7 @@ object PopulationPyramid {
       // Allow the arrow keys to change the displayed year.
       dom.window.focus()
       d3.select(dom.window).on("keydown", () => {
-        d3.event.asInstanceOf[dom.KeyboardEvent].keyCode match {
+        d3.event().asInstanceOf[dom.KeyboardEvent].keyCode match {
           case 37 => year = Math.max(year0, year - 10)
           case 39 => year = Math.min(year1, year + 10)
         }

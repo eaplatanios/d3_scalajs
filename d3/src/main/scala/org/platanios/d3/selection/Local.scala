@@ -13,12 +13,13 @@
  * the License.
  */
 
-package org.platanios.d3
+package org.platanios.d3.selection
+
+import org.scalajs.dom
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.scalajs.js.|
-import org.scalajs.dom
 
 /** D3 locals allow you to define local state independent of data. For instance, when rendering small multiples of
   * time-series data, you might want to use the same x-scale for all charts but distinct y-scales to compare the
@@ -27,24 +28,6 @@ import org.scalajs.dom
   *
   * @author Emmanouil Antonios Platanios
   */
-@JSImport("d3-selection", JSImport.Namespace)
-@js.native object Local extends js.Object {
-  /** Declares a new local variable.
-    *
-    * For example:
-    * {{{
-    *   val local = D3.local[String]()
-    * }}}
-    * Like `val`, each local is a distinct symbolic reference; unlike `val`, the value of each local is also scoped by
-    * the DOM.
-    *
-    * @tparam T Type of the local variable.
-    * @return New local variable
-    */
-  def local[T](): Local[T] = js.native
-}
-
-/** Represents a local variable. */
 @js.native trait Local[T] extends js.Object {
   /** Retrieves a local variable stored in the provided node (or one of its parents).
     *
@@ -73,4 +56,21 @@ import org.scalajs.dom
   /** Returns a string with the internally assigned property name for the local variable which is used to store the
     * value on a node. */
   override def toString: String = js.native
+}
+
+@JSImport("d3-selection", JSImport.Namespace)
+@js.native object Local extends js.Object {
+  /** Declares a new local variable.
+    *
+    * For example:
+    * {{{
+    *   val local = d3.local[String]()
+    * }}}
+    * Like `val`, each local is a distinct symbolic reference; unlike `val`, the value of each local is also scoped by
+    * the DOM.
+    *
+    * @tparam T Type of the local variable.
+    * @return New local variable
+    */
+  def apply[T](): Local[T] = js.native
 }

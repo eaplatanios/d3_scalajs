@@ -23,25 +23,22 @@ import scala.scalajs.js.annotation.{JSBracketAccess, JSImport}
 package object d3 extends Implicits {
   /** Helper trait which covers argument types like NodeListOf[T] or HTMLCollectionOf[T]. */
   @js.native trait ArrayLike[T] extends js.Object {
-    var length: Double = js.native
-    def item(index: Double): T = js.native
-    @JSBracketAccess def apply(index: Double): T = js.native
-    @JSBracketAccess def update(index: Double, v: T): Unit = js.native
+    val length: Int = js.native
+    def item(index: Int): T = js.native
+    @JSBracketAccess def apply(index: Int): T = js.native
+    @JSBracketAccess def update(index: Int, v: T): Unit = js.native
   }
 
   //region Handling Events
 
-  @js.native trait BaseEvent extends js.Object {
-    var `type`     : String    = js.native
-    var sourceEvent: dom.Event = js.native
-  }
-
   /** User interface event (e.g., mouse event, touch or MSGestureEvent) with captured `clientX` and `clientY`
     * properties. */
-  @js.native trait ClientPointEvent extends js.Object {
-    var clientX: Double = js.native
-    var clientY: Double = js.native
+  @js.native trait ClientPointEvent extends dom.Event {
+    val clientX: Double = js.native
+    val clientY: Double = js.native
   }
+
+  // TODO: Need a way to be able to create such parameter maps on the Scala side.
 
   /** Trait for the optional parameters map, used when dispatching custom events on a selection. */
   @js.native trait CustomEventParameters extends js.Object {
@@ -86,10 +83,6 @@ package object d3 extends Implicits {
 
   implicit def d3toArray(d3: org.platanios.d3.d3.type): array.Array.type = array.Array
   implicit def d3toDrag(d3: org.platanios.d3.d3.type): drag.Drag.type = drag.Drag
-  implicit def d3toSelection(d3: org.platanios.d3.d3.type): selection.Selection.type = selection.Selection
-  implicit def d3toLocal(d3: org.platanios.d3.d3.type): Local.type = Local
-  implicit def d3toNamespaces(d3: org.platanios.d3.d3.type): Namespaces.type = Namespaces
-
   implicit def d3toD3Force(d3: org.platanios.d3.d3.type): D3Force.type = D3Force
   implicit def d3toD3Polygon(d3: org.platanios.d3.d3.type): D3Polygon.type = D3Polygon
   implicit def d3toD3Shape(d3: org.platanios.d3.d3.type): D3Shape.type = D3Shape
@@ -150,10 +143,14 @@ package object d3 extends Implicits {
     val axis       : org.platanios.d3.axis.Axis.type               = org.platanios.d3.axis.Axis
     val color      : org.platanios.d3.color.Color.type             = org.platanios.d3.color.Color
     val dsv        : org.platanios.d3.data.DSV.type                = org.platanios.d3.data.DSV
+    val event      : org.platanios.d3.selection.Event.type         = org.platanios.d3.selection.Event
     val fetch      : org.platanios.d3.data.Fetch.type              = org.platanios.d3.data.Fetch
     val format     : org.platanios.d3.format.Format.type           = org.platanios.d3.format.Format
     val interpolate: org.platanios.d3.interpolate.Interpolate.type = org.platanios.d3.interpolate.Interpolate
+    val local      : org.platanios.d3.selection.Local.type         = org.platanios.d3.selection.Local
+    val namespaces : org.platanios.d3.selection.Namespaces.type    = org.platanios.d3.selection.Namespaces
     val random     : org.platanios.d3.random.Random.type           = org.platanios.d3.random.Random
+    val select     : org.platanios.d3.selection.Selection.type     = org.platanios.d3.selection.Selection
     val time       : org.platanios.d3.time.Time.type               = org.platanios.d3.time.Time
     val timer      : org.platanios.d3.time.Timer.type              = org.platanios.d3.time.Timer
 

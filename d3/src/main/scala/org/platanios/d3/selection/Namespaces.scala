@@ -13,10 +13,10 @@
  * the License.
  */
 
-package org.platanios.d3
+package org.platanios.d3.selection
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.{JSBracketAccess, JSImport}
+import scala.scalajs.js.annotation.{JSBracketAccess, JSImport, JSName}
 import scala.scalajs.js.|
 
 /** XML namespaces are fun! Right? Fortunately you can mostly ignore them.
@@ -38,7 +38,7 @@ import scala.scalajs.js.|
   }
 
   /** Map of namespace prefixes to corresponding fully qualified namespace strings. */
-  val namespaces: NamespaceMap = js.native
+  @JSName("namespaces") val map: NamespaceMap = js.native
 
   /** Obtains an object with the properties of a fully qualified namespace string and the name of local by parsing a
     * shorthand string `"prefix:local"`. If the prefix does not exist in the `namespaces` object provided by D3, then
@@ -47,5 +47,5 @@ import scala.scalajs.js.|
     * @param  prefixedLocal String composed of the namespace prefix and the local name separated by a colon.
     *                       For example, `"svg:text"`.
     */
-  def namespace(prefixedLocal: String): NamespaceLocalObject | String = js.native
+  @JSName("namespace") def apply(prefixedLocal: String): NamespaceLocalObject | String = js.native
 }

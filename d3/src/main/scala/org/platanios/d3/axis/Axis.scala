@@ -77,7 +77,7 @@ class Axis[Domain, TickArg] protected (
     private[d3] val facade: Axis.Facade[Domain, TickArg]
 ) {
   def apply[C <: dom.Element](context: Selection[C, js.Any, dom.Element, js.Any]): Unit = {
-    facade.apply(context)
+    facade.apply(context.facade)
   }
 
   def apply[C <: dom.Element](context: TransitionLike[C, js.Any]): Unit = facade.apply(context)
@@ -234,7 +234,7 @@ class Axis[Domain, TickArg] protected (
 
 object Axis {
   @js.native trait Facade[Domain, TickArg] extends js.Object {
-    def apply[C <: dom.Element](context: Selection[C, js.Any, dom.Element, js.Any]): Unit = js.native
+    def apply[C <: dom.Element](context: Selection.Facade[C, js.Any, dom.Element, js.Any]): Unit = js.native
     def apply[C <: dom.Element](context: TransitionLike[C, js.Any]): Unit = js.native
     def scale(): Scale[Domain, Double, Double, TickArg, _, _] = js.native
     def scale[Number: JsNumber](scale: Scale[Domain, Number, Number, TickArg, _, _]): this.type = js.native

@@ -44,8 +44,7 @@ accessible.
 - [ ] d3-sankey
 - [x] d3-scale-chromatic
 - [x] d3-scale
-- [ ] d3-selection-multi
-- [ ] d3-selection
+- [x] d3-selection
 - [ ] d3-shape
 - [x] d3-time-format
 - [x] d3-time
@@ -54,6 +53,8 @@ accessible.
 - [ ] d3-transition
 - [ ] d3-voronoi
 - [ ] d3-zoom
+
+We have decided to not support d3-selection-multi and d3-request at all.
 
 ### Third Party
 
