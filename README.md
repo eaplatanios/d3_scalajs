@@ -37,7 +37,7 @@ accessible.
 - [x] d3-hsv
 - [x] d3-interpolate
 - [ ] d3-path
-- [ ] d3-polygon
+- [x] d3-polygon
 - [ ] d3-quadtree
 - [ ] d3-queue
 - [x] d3-random

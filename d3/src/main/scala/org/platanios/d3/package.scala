@@ -149,6 +149,7 @@ package object d3 extends Implicits {
     val interpolate: org.platanios.d3.interpolate.Interpolate.type = org.platanios.d3.interpolate.Interpolate
     val local      : org.platanios.d3.selection.Local.type         = org.platanios.d3.selection.Local
     val namespaces : org.platanios.d3.selection.Namespaces.type    = org.platanios.d3.selection.Namespaces
+    val polygon    : org.platanios.d3.shape.Polygon.type           = org.platanios.d3.shape.Polygon
     val random     : org.platanios.d3.random.Random.type           = org.platanios.d3.random.Random
     val select     : org.platanios.d3.selection.Selection.type     = org.platanios.d3.selection.Selection
     val time       : org.platanios.d3.time.Time.type               = org.platanios.d3.time.Time
