@@ -1218,7 +1218,7 @@ class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] private[
     *   parent.each((e: dom.Element, p: dom.Element) => {
     *     d3.select(e)
     *       .selectAll(".child")
-    *       .text((d: dom.Element) => "child ${d.name} of ${p.name}")
+    *       .text((d: dom.Element) => "child \${d.name} of \${p.name}")
     *   })
     * }}}
     *

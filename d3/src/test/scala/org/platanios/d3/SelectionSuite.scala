@@ -34,7 +34,7 @@ class SelectionSuite extends FunSuite {
   }
 
   test("'D3.selectAll' should work for a single element.") {
-    val selection = d3.selectAll("p")
+    val selection = d3.select.all("p")
     val node = selection.node()
     assert(element === node)
   }
@@ -46,7 +46,7 @@ class SelectionSuite extends FunSuite {
   }
 
   test("'D3.Selection.selectAll' should work for a single element.") {
-    val selection = d3.selectAll("body").selectAll("p")
+    val selection = d3.select.all("body").selectAll("p")
     val node = selection.node()
     assert(element === node)
   }

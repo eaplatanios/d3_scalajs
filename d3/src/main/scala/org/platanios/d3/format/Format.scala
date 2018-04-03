@@ -41,7 +41,7 @@ import scala.scalajs.js.|
   * Yet rounding error is not the only reason to customize number formatting. A table of numbers should be formatted
   * consistently for comparison; above, `0.0` would be better than 0. Large numbers should have grouped digits
   * (e.g., `42,000`) or be in scientific or metric notation (`4.2e+4`, `42k`). Currencies should have fixed precision
-  * (`$3.50`). Reported numerical results should be rounded to significant digits (`4021` becomes `4000`). Number
+  * (`\$3.50`). Reported numerical results should be rounded to significant digits (`4021` becomes `4000`). Number
   * formats should appropriate to the reader's locale (`42.000,00` or `42,000.00`). The list goes on.
   *
   * Formatting numbers for human consumption is the purpose of D3-format, which is modeled after Python 3's format
@@ -63,7 +63,7 @@ import scala.scalajs.js.|
   * A few more examples:
   * {{{
   *   d3.format.number(".0%")(0.123)  // Rounded percentage, "12%"
-  *   d3.format.number("($.2f")(-3.5) // Localized fixed-point currency, "(£3.50)"
+  *   d3.format.number("(\$.2f")(-3.5) // Localized fixed-point currency, "(£3.50)"
   *   d3.format.number("+20")(42)     // Space-filled and signed, "                 +42"
   *   d3.format.number(".^20")(42)    // Dot-filled and centered, ".........42........."
   *   d3.format.number(".2s")(42e6)   // SI-prefix with two significant digits, "42M"
@@ -165,7 +165,7 @@ object Format {
     * `0.5` and the suggested precision is `1`:
     * {{{
     *   val p = d3.format.precisionFixed(0.5)
-    *   val f = d3.format(Specifier.parse(s".${p}f"))
+    *   val f = d3.format(Specifier.parse(s".\${p}f"))
     *   f(1)   // "1.0"
     *   f(1.5) // "1.5"
     *   f(2)   // "2.0"
@@ -173,7 +173,7 @@ object Format {
     * Whereas for the numbers `1`, `2` and `3`, the step should be `1` and the suggested precision is `0`:
     * {{{
     *   val p = d3.format.precisionFixed(1.0)
-    *   val f = d3.format(Specifier.parse(s".${p}f"))
+    *   val f = d3.format(Specifier.parse(s".\${p}f"))
     *   f(1) // "1"
     *   f(2) // "2"
     *   f(3) // "3"
@@ -181,7 +181,7 @@ object Format {
     * Note that for the percentage format notation, you should subtract `2`:
     * {{{
     *   val p = Math.max(0.0, d3.format.precisionFixed(0.05) - 2)
-    *   val f = d3.format(Specifier.parse(s".${p}%"))
+    *   val f = d3.format(Specifier.parse(s".\${p}%"))
     *   f(0.45) // "45%"
     *   f(0.50) // "50%"
     *   f(0.55) // "55%"
@@ -201,7 +201,7 @@ object Format {
     * `1.3e6`, and the suggested precision is `1`:
     * {{{
     *   val p = d3.format.precisionPrefix(1e5, 1.3e6)
-    *   val f = d3.formatPrefix(Specifier.parse(s".${p}"), 1.3e6)
+    *   val f = d3.formatPrefix(Specifier.parse(s".\${p}"), 1.3e6)
     *   f(1.1e6) // "1.1M"
     *   f(1.2e6) // "1.2M"
     *   f(1.3e6) // "1.3M"
@@ -222,7 +222,7 @@ object Format {
     * should be `0.01`, the max should be `1.01`, and the suggested precision is `3`:
     * {{{
     *   val p = d3.format.precisionRound(0.01, 1.01)
-    *   val f = d3.format(Specifier.parse(s".${p}r"))
+    *   val f = d3.format(Specifier.parse(s".\${p}r"))
     *   f(0.99) // "0.990"
     *   f(1.0)  // "1.00"
     *   f(1.01) // "1.01"
@@ -231,7 +231,7 @@ object Format {
     * suggested precision is `2`:
     * {{{
     *   val p = d3.format.precisionRound(0.1, 1.1)
-    *   val f = d3.format(Specifier.parse(s".${p}r"))
+    *   val f = d3.format(Specifier.parse(s".\${p}r"))
     *   f(0.9) // "0.90"
     *   f(1.0) // "1.0"
     *   f(1.1) // "1.1"
@@ -239,7 +239,7 @@ object Format {
     * Note that for the exponent notation, you should subtract `1`:
     * {{{
     *   val p = Math.max(0.0, d3.format.precisionRound(0.01, 1.01) - 1)
-    *   val f = d3.format(Specifier.parse(s".${p}e"))
+    *   val f = d3.format(Specifier.parse(s".\${p}e"))
     *   f(0.01) // "1.00e-2"
     *   f(1.01) // "1.01e+0"
     * }}}
