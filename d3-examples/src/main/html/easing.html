@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+
+    .axis--y .domain,
+    .axis .tick:nth-child(2n - 1) text {
+      display: none;
+    }
+
+    .axis--x .domain {
+      fill: #e7e7e7;
+      stroke: none;
+    }
+
+    .axis .tick line {
+      stroke: #fff;
+    }
+
+    .axis .tick:nth-child(2n - 1) line {
+      stroke-opacity: 0.5;
+    }
+
+    .line path {
+      fill: none;
+      stroke: #000;
+      stroke-width: 2px;
+    }
+
+    #ease-type {
+      position: absolute;
+      top: 100px;
+      left: 130px;
+    }
+
+  </style>
+  <script type="text/javascript" src="../../../target/scala-2.12/scalajs-bundler/main/d3-examples-fastopt-bundle.js"></script>
+</head>
+<body>
+  <select id="ease-type">
+    <option selected value="linear">linear</option>
+    <option value="quadIn">quadIn</option>
+    <option value="quadOut">quadOut</option>
+    <option value="quadInOut">quadInOut</option>
+    <option value="cubicIn">cubicIn</option>
+    <option value="cubicOut">cubicOut</option>
+    <option value="cubicInOut">cubicInOut</option>
+    <option value="polyIn">polyIn</option>
+    <option value="polyOut">polyOut</option>
+    <option value="polyInOut">polyInOut</option>
+    <option value="sinIn">sinIn</option>
+    <option value="sinOut">sinOut</option>
+    <option value="sinInOut">sinInOut</option>
+    <option value="expIn">expIn</option>
+    <option value="expOut">expOut</option>
+    <option value="expInOut">expInOut</option>
+    <option value="circleIn">circleIn</option>
+    <option value="circleOut">circleOut</option>
+    <option value="circleInOut">circleInOut</option>
+    <option value="bounceIn">bounceIn</option>
+    <option value="bounceOut">bounceOut</option>
+    <option value="bounceInOut">bounceInOut</option>
+    <option value="backIn">backIn</option>
+    <option value="backOut">backOut</option>
+    <option value="backInOut">backInOut</option>
+    <option value="elasticIn">elasticIn</option>
+    <option value="elasticOut">elasticOut</option>
+    <option value="elasticInOut">elasticInOut</option>
+  </select>
+  <script>Easing.run()</script>
+</body>
+</html>

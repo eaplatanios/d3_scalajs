@@ -142,6 +142,7 @@ package object d3 extends Implicits {
     val axis       : org.platanios.d3.axis.Axis.type               = org.platanios.d3.axis.Axis
     val color      : org.platanios.d3.color.Color.type             = org.platanios.d3.color.Color
     val dsv        : org.platanios.d3.data.DSV.type                = org.platanios.d3.data.DSV
+    val ease       : org.platanios.d3.selection.Ease.type          = org.platanios.d3.selection.Ease
     val event      : org.platanios.d3.selection.Event.type         = org.platanios.d3.selection.Event
     val fetch      : org.platanios.d3.data.Fetch.type              = org.platanios.d3.data.Fetch
     val format     : org.platanios.d3.format.Format.type           = org.platanios.d3.format.Format
