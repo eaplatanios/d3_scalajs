@@ -17,7 +17,7 @@ package org.platanios.d3.axis
 
 import org.platanios.d3.{D3Function, JsNumber}
 import org.platanios.d3.scale.Scale
-import org.platanios.d3.selection.{Selection, TransitionLike}
+import org.platanios.d3.selection.{Selection, Transition}
 
 import org.scalajs.dom
 
@@ -76,11 +76,13 @@ import scala.scalajs.js.annotation.JSImport
 class Axis[Domain, TickArg] protected (
     private[d3] val facade: Axis.Facade[Domain, TickArg]
 ) {
-  def apply[C <: dom.Element](context: Selection[C, js.Any, dom.Element, js.Any]): Unit = {
+  def apply[E <: dom.EventTarget](context: Selection[E, js.Any, dom.Element, js.Any]): Unit = {
     facade.apply(context.facade)
   }
 
-  def apply[C <: dom.Element](context: TransitionLike[C, js.Any]): Unit = facade.apply(context)
+  def apply[E <: dom.EventTarget](context: Transition[E, js.Any, dom.Element, js.Any]): Unit = {
+    facade.apply(context.facade)
+  }
 
   /** Returns the scale used by this axis. */
   def scale(): Scale[Domain, Double, Double, TickArg, _, _] = facade.scale()
@@ -234,8 +236,8 @@ class Axis[Domain, TickArg] protected (
 
 object Axis {
   @js.native trait Facade[Domain, TickArg] extends js.Object {
-    def apply[C <: dom.Element](context: Selection.Facade[C, js.Any, dom.Element, js.Any]): Unit = js.native
-    def apply[C <: dom.Element](context: TransitionLike[C, js.Any]): Unit = js.native
+    def apply[E <: dom.EventTarget](context: Selection.Facade[E, js.Any, dom.Element, js.Any]): Unit = js.native
+    def apply[E <: dom.EventTarget](context: Transition.Facade[E, js.Any, dom.Element, js.Any]): Unit = js.native
     def scale(): Scale[Domain, Double, Double, TickArg, _, _] = js.native
     def scale[Number: JsNumber](scale: Scale[Domain, Number, Number, TickArg, _, _]): this.type = js.native
     def ticks(tick: Any, specifier: String = ???): Facade[Domain, TickArg] = js.native

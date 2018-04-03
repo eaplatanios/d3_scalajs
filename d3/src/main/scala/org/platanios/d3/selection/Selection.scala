@@ -68,16 +68,16 @@ import scala.scalajs.js.|
   *
   * @author Emmanouil Antonios Platanios
   */
-class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protected (
+class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] private[selection] (
     private[d3] val facade: Selection.Facade[E, D, PE, PD]
 ) {
   //region Selecting Elements
 
-  /** Returns the `index`-th group in this selection. */
-  def apply(index: Index): Selection.Group = facade(index)
+  // /** Returns the `index`-th group in this selection. */
+  // def apply(index: Index): Selection.Group = facade(index)
 
-  /** Updated the `index`-th group in this selection. */
-  def update(index: Index, value: Selection.Group): Unit = facade.update(index, value)
+  // /** Updated the `index`-th group in this selection. */
+  // def update(index: Index, value: Selection.Group): Unit = facade.update(index, value)
 
   /** Creates an empty selection. `Selection.select` does not affect grouping; it preserves the existing group
     * structure and indexes, and propagates data (if any) to the selected children. */
@@ -334,7 +334,7 @@ class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protecte
     facade.attr(name)
   }
 
-  /** Set the attribute with the specified name to the specified value on the selected elements and returns this
+  /** Sets the attribute with the specified name to the specified value on the selected elements and returns this
     * selection. If the value is a constant, all elements are given the same attribute value; otherwise, if the value is
     * a function, it is evaluated for each selected element, in order, being passed the current datum (`d`), the current
     * index (`i`), and the current group (`nodes`), with this as the current DOM element (`nodes(i)`). The function's
@@ -387,7 +387,7 @@ class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protecte
     new Selection(facade.classed(names, value))
   }
 
-  /** returns the current value of the specified style property for the first (non-`null`) element in the selection.
+  /** Returns the current value of the specified style property for the first (non-`null`) element in the selection.
     * The current value is defined as the element's inline value, if present, and otherwise its computed value.
     * Accessing the current style value is generally useful only if you know the selection contains exactly one element.
     *
@@ -497,7 +497,7 @@ class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protecte
     * the value is a constant, then all elements are given the same text content; otherwise, if the value is a function,
     * it is evaluated for each selected element, in order, being passed the current datum (`d`), the current index
     * (`i`), and the current group (`nodes`), with this as the current DOM element (`nodes(i)`). The function's return
-    * value is then used to set each element's text content. A null value will clear the content.
+    * value is then used to set each element's text content. A `null` value will clear the content.
     *
     * @param  value Value function.
     * @return Selection after the modification is applied.
@@ -1136,7 +1136,7 @@ class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protecte
     *                      The optional name allows multiple callbacks to be registered to receive events of the same
     *                      type, such as `"click.foo"` and `"click.bar"`. To specify multiple typenames, separate
     *                      typenames with spaces, such as `"input change"` or `"click.foo click.bar"`.
-    * @return Currently-assigned listener for the specified event typename on the first (non-`null`) selected element,
+    * @return Currently assigned listener for the specified event typename on the first (non-`null`) selected element,
     *         if any.
     */
   def on[SE >: E <: dom.EventTarget, SD >: D](domTypeNames: String): D3Function[SE, SD, Unit] = {
@@ -1281,30 +1281,108 @@ class Selection[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] protecte
 
   //region Transitions
 
-  // TODO: !!! Transitions.
+  /** Returns a new transition on the given selection with the specified name. If a name is not specified, `null` is
+    * used. The new transition is only exclusive with other transitions of the same name.
+    *
+    * If the name is a transition instance, the returned transition has the same id and name as the specified
+    * transition. If a transition with the same id already exists on a selected element, the existing transition is
+    * returned for that element. Otherwise, the timing of the returned transition is inherited from the existing
+    * transition of the same id on the nearest ancestor of each selected element. Thus, this method can be used to
+    * synchronize a transition across multiple selections, or to re-select a transition for specific elements and modify
+    * its configuration.
+    *
+    * For example:
+    * {{{
+    *   val t = d3.transition()
+    *     .duration(750)
+    *     .ease(d3.ease.linear)
+    *
+    *   d3.select.all(".apple").transition(t)
+    *     .style("fill", "red")
+    *
+    *   d3.select.all(".orange").transition(t)
+    *     .style("fill", "orange")
+    * }}}
+    *
+    * If the specified transition is not found on a selected node or its ancestors (such as if the transition
+    * [already ended](https://github.com/d3/d3-transition#the-life-of-a-transition)), the default timing parameters are
+    * used. However, in a future release, this will likely be changed to throw an error.
+    * See [#59](https://github.com/d3/d3-transition/issues/59).
+    *
+    * @param  name Transition name to use.
+    * @return Transition.
+    */
+  def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
+      name: String = null
+  ): Transition[SE, SD, SPE, SPD] = {
+    if (name != null)
+      new Transition(facade.transition(name))
+    else
+      new Transition(facade.transition())
+  }
 
+  /** Returns a new transition on the given selection with the specified name. If a name is not specified, `null` is
+    * used. The new transition is only exclusive with other transitions of the same name.
+    *
+    * If a transition instance is provided, the returned transition has the same id and name as the specified
+    * transition. If a transition with the same id already exists on a selected element, the existing transition is
+    * returned for that element. Otherwise, the timing of the returned transition is inherited from the existing
+    * transition of the same id on the nearest ancestor of each selected element. Thus, this method can be used to
+    * synchronize a transition across multiple selections, or to re-select a transition for specific elements and modify
+    * its configuration.
+    *
+    * For example:
+    * {{{
+    *   val t = d3.transition()
+    *     .duration(750)
+    *     .ease(d3.ease.linear)
+    *
+    *   d3.select.all(".apple").transition(t)
+    *     .style("fill", "red")
+    *
+    *   d3.select.all(".orange").transition(t)
+    *     .style("fill", "orange")
+    * }}}
+    *
+    * If the specified transition is not found on a selected node or its ancestors (such as if the transition
+    * [already ended](https://github.com/d3/d3-transition#the-life-of-a-transition)), the default timing parameters are
+    * used. However, in a future release, this will likely be changed to throw an error.
+    * See [#59](https://github.com/d3/d3-transition/issues/59).
+    *
+    * @param  transition Transition from which to derive the id and name of the new transition.
+    * @return Transition.
+    */
+  def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
+      transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]
+  ): Transition[SE, SD, SPE, SPD] = {
+    new Transition(facade.transition(transition.facade))
+  }
+
+  /** Interrupts the active transition of the specified name on the selected elements, and cancels any pending
+    * transitions with the specified name, if any. If a name is not specified, `null` is used.
+    *
+    * Interrupting a transition on an element has no effect on any transitions on any descendant elements. For example,
+    * an axis transition consists of multiple independent, synchronized transitions on the descendants of the axis G
+    * element (the tick lines, the tick labels, the domain path, etc.). To interrupt the axis transition, you must
+    * therefore interrupt the descendants:
+    * {{{
+    *   selection.select.all("*").interrupt()
+    * }}}
+    * The universal selector, `*`, selects all descendant elements. If you also want to interrupt the G element itself:
+    * {{{
+    *   selection.interrupt().select.all("*").interrupt()
+    * }}}
+    *
+    * @param  name Optional name for the transition to interrupt.
+    * @return Transition after the interruption.
+    */
   def interrupt[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
       name: String = null
   ): Transition[SE, SD, SPE, SPD] = {
     if (name != null)
-      facade.interrupt(name)
+      new Transition(facade.interrupt(name))
     else
-      facade.interrupt()
-  }
-
-  def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
-      name: String = null
-  ): Transition[SE, SD, SPE, SPD] = {
-    if (name != null)
-      facade.transition(name)
-    else
-      facade.transition()
-  }
-
-  def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](
-      transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]
-  ): Transition[SE, SD, SPE, SPD] = {
-    facade.transition(transition)
+      new Transition(facade.interrupt())
   }
 
   //endregion Transitions
@@ -1569,8 +1647,8 @@ object Selection {
   }
 
   @js.native private[d3] trait Facade[+E <: dom.EventTarget, +D, +PE <: dom.EventTarget, +PD] extends js.Object {
-    @JSBracketAccess def apply(index: Index): Group = js.native
-    @JSBracketAccess def update(index: Index, value: Group): Unit = js.native
+    // @JSBracketAccess def apply(index: Index): Group = js.native
+    // @JSBracketAccess def update(index: Index, value: Group): Unit = js.native
 
     def select[DE <: dom.EventTarget](selector: Null): Facade[Null, Unit, PE, PD] = js.native
     def select[DE <: dom.EventTarget](selector: String): Facade[DE, D, PE, PD] = js.native
@@ -1631,12 +1709,8 @@ object Selection {
     def node(): E = js.native
     def size(): Int = js.native
 
-    //region Transitions
-
-    def interrupt[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](name: String = null): Transition[SE, SD, SPE, SPD] = js.native
-    def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](name: String = null): Transition[SE, SD, SPE, SPD] = js.native
-    def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](transition: Transition[dom.EventTarget, js.Any, dom.EventTarget, js.Any]): Transition[SE, SD, SPE, SPD] = js.native
-
-    //endregion Transitions
+    def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](name: String = null): Transition.Facade[SE, SD, SPE, SPD] = js.native
+    def transition[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](transition: Transition.Facade[dom.EventTarget, js.Any, dom.EventTarget, js.Any]): Transition.Facade[SE, SD, SPE, SPD] = js.native
+    def interrupt[SE >: E <: dom.EventTarget, SD >: D, SPE >: PE <: dom.EventTarget, SPD >: PD](name: String = null): Transition.Facade[SE, SD, SPE, SPD] = js.native
   }
 }

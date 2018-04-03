@@ -427,7 +427,7 @@ object Format {
         symbol = Symbol.parse(facadeSpecifier.symbol),
         width = facadeSpecifier.width.toOption,
         useGroupSeparator = facadeSpecifier.comma,
-        notation = Notation.parse(facadeSpecifier.`type`, facadeSpecifier.precision))
+        notation = Notation.parse(facadeSpecifier.`type`, facadeSpecifier.precision.toOption))
     }
   }
 
@@ -634,15 +634,15 @@ object Format {
   }
 
   object Notation {
-    def parse(value: String, precision: Int): Notation = value match {
-      case "" => Plain(precision)
-      case "f" => FixedPoint(precision)
-      case "r" => RoundedDecimal(precision)
-      case "e" => Exponent(precision)
-      case "g" => RoundedDecimalOrExponent(precision)
-      case "s" => DecimalSI(precision)
-      case "p" => DecimalPercent(precision)
-      case "%" => Percent(precision)
+    def parse(value: String, precision: Option[Int]): Notation = value match {
+      case "" => Plain(precision.getOrElse(12))
+      case "f" => FixedPoint(precision.getOrElse(6))
+      case "r" => RoundedDecimal(precision.getOrElse(6))
+      case "e" => Exponent(precision.getOrElse(6))
+      case "g" => RoundedDecimalOrExponent(precision.getOrElse(6))
+      case "s" => DecimalSI(precision.getOrElse(6))
+      case "p" => DecimalPercent(precision.getOrElse(6))
+      case "%" => Percent(precision.getOrElse(6))
       case "b" => Binary
       case "o" => Octal
       case "d" => Decimal
@@ -753,7 +753,7 @@ object Format {
     var zero     : Boolean         = js.native
     var width    : js.UndefOr[Int] = js.native
     var comma    : Boolean         = js.native
-    var precision: Int             = js.native
+    var precision: js.UndefOr[Int] = js.native
     var `type`   : String          = js.native
   }
 

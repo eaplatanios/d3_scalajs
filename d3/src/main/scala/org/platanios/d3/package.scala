@@ -153,6 +153,7 @@ package object d3 extends Implicits {
     val select     : org.platanios.d3.selection.Selection.type     = org.platanios.d3.selection.Selection
     val time       : org.platanios.d3.time.Time.type               = org.platanios.d3.time.Time
     val timer      : org.platanios.d3.time.Timer.type              = org.platanios.d3.time.Timer
+    val transition : org.platanios.d3.selection.Transition.type    = org.platanios.d3.selection.Transition
 
     object scale extends org.platanios.d3.scale.API
   }

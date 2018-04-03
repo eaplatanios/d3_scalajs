@@ -16,7 +16,7 @@
 package org.platanios.d3.zoom
 
 import org.platanios.d3.D3Function
-import org.platanios.d3.selection.{Selection, TransitionLike}
+import org.platanios.d3.selection.{Selection, Transition}
 
 import org.scalajs.dom
 
@@ -26,21 +26,21 @@ import scala.scalajs.js
   * @author Emmanouil Antonios Platanios
   */
 @js.native trait ZoomBehavior[E <: dom.Element, D] extends js.Function {
-  def apply(selection: Selection[E, D, dom.Element, js.Any], args: js.Any*): Unit = js.native
-  def transform(selection: Selection[E, D, dom.Element, js.Any], transform: D3Function[E, D, ZoomTransform]): Unit = js.native
-  def transform(transition: TransitionLike[E, D], transform: D3Function[E, D, ZoomTransform]): Unit = js.native
+  def apply(selection: Selection.Facade[E, D, dom.Element, js.Any], args: js.Any*): Unit = js.native
+  def transform(selection: Selection.Facade[E, D, dom.Element, js.Any], transform: D3Function[E, D, ZoomTransform]): Unit = js.native
+  def transform(transition: Transition.Facade[E, D, dom.Element, js.Any], transform: D3Function[E, D, ZoomTransform]): Unit = js.native
 
-  def translateBy(selection: Selection[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
-  def translateBy(transition: TransitionLike[E, D], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+  def translateBy(selection: Selection.Facade[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+  def translateBy(transition: Transition.Facade[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
 
-  def translateTo(selection: Selection[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
-  def translateTo(transition: TransitionLike[E, D], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+  def translateTo(selection: Selection.Facade[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
+  def translateTo(transition: Transition.Facade[E, D, dom.Element, js.Any], x: D3Function[E, D, Double], y: D3Function[E, D, Double]): Unit = js.native
 
-  def scaleBy(selection: Selection[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
-  def scaleBy(transition: TransitionLike[E, D], k: D3Function[E, D, Double]): Unit = js.native
+  def scaleBy(selection: Selection.Facade[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
+  def scaleBy(transition: Transition.Facade[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
 
-  def scaleTo(selection: Selection[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
-  def scaleTo(transition: TransitionLike[E, D], k: D3Function[E, D, Double]): Unit = js.native
+  def scaleTo(selection: Selection.Facade[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
+  def scaleTo(transition: Transition.Facade[E, D, dom.Element, js.Any], k: D3Function[E, D, Double]): Unit = js.native
 
   def constrain(): js.Function3[ZoomTransform, js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], ZoomTransform] = js.native
   def constrain(constraint: js.Function3[ZoomTransform, js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], js.Tuple2[js.Tuple2[Double, Double], js.Tuple2[Double, Double]], ZoomTransform]): this.type = js.native

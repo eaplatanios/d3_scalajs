@@ -49,8 +49,7 @@ accessible.
 - [x] d3-time-format
 - [x] d3-time
 - [x] d3-timer
-- [ ] d3-tip
-- [ ] d3-transition
+- [x] d3-transition
 - [ ] d3-voronoi
 - [ ] d3-zoom
 
@@ -61,3 +60,4 @@ We have decided to not support d3-selection-multi and d3-request at all.
 - [ ] d3-cloud-layout
 - [ ] d3-box
 - [ ] d3-slider
+- [ ] d3-tip
