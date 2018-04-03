@@ -84,7 +84,6 @@ package object d3 extends Implicits {
   implicit def d3toArray(d3: org.platanios.d3.d3.type): array.Array.type = array.Array
   implicit def d3toDrag(d3: org.platanios.d3.d3.type): drag.Drag.type = drag.Drag
   implicit def d3toD3Force(d3: org.platanios.d3.d3.type): D3Force.type = D3Force
-  implicit def d3toD3Polygon(d3: org.platanios.d3.d3.type): D3Polygon.type = D3Polygon
   implicit def d3toD3Shape(d3: org.platanios.d3.d3.type): D3Shape.type = D3Shape
   implicit def d3toD3QuadTree(d3: org.platanios.d3.d3.type): D3QuadTree.type = D3QuadTree
   //  implicit def d3toD3Zoom(d3: D3.type): D3Zoom.type = D3Zoom

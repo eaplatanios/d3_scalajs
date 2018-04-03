@@ -26,6 +26,9 @@ import scala.scalajs.js.annotation.JSImport
   * @author Emmanouil Antonios Platanios
   */
 object Polygon {
+  type Point = (Double, Double)
+  type Polygon = Seq[Point]
+
   /** Returns the signed area of the specified polygon. If the vertices of the polygon are in counterclockwise order
     * (assuming a coordinate system where the origin `(0, 0)` is in the top-left corner), the returned area is positive.
     * Otherwise, it is negative, or zero.
@@ -33,7 +36,7 @@ object Polygon {
     * @param  polygon Polygon vertices.
     * @return Polygon area.
     */
-  def area(polygon: Seq[(Double, Double)]): Double = {
+  def area(polygon: Polygon): Double = {
     Facade.polygonArea(js.Array(polygon.map(p => p: js.Tuple2[Double, Double]): _*))
   }
 
@@ -42,7 +45,7 @@ object Polygon {
     * @param  polygon Polygon vertices.
     * @return Polygon centroid.
     */
-  def centroid(polygon: Seq[(Double, Double)]): (Double, Double) = {
+  def centroid(polygon: Polygon): Point = {
     Facade.polygonCentroid(js.Array(polygon.map(p => p: js.Tuple2[Double, Double]): _*))
   }
 
@@ -56,7 +59,7 @@ object Polygon {
     * @param  polygon Polygon vertices.
     * @return Polygon hull.
     */
-  def hull(polygon: Seq[(Double, Double)]): Seq[(Double, Double)] = {
+  def hull(polygon: Polygon): Polygon = {
     Facade.polygonHull(js.Array(polygon.map(p => p: js.Tuple2[Double, Double]): _*)).map(p => (p._1, p._2))
   }
 
@@ -67,7 +70,7 @@ object Polygon {
     * @param  point   Point to check if inside the provided polygon.
     * @return `true` if the provided polygon contains `point`.
     */
-  def contains(polygon: Seq[(Double, Double)], point: (Double, Double)): Boolean = {
+  def contains(polygon: Polygon, point: Point): Boolean = {
     Facade.polygonContains(js.Array(polygon.map(p => p: js.Tuple2[Double, Double]): _*), point)
   }
 
@@ -76,7 +79,7 @@ object Polygon {
     * @param  polygon Polygon vertices.
     * @return Polygon perimeter.
     */
-  def perimeter(polygon: Seq[(Double, Double)]): Double = {
+  def perimeter(polygon: Polygon): Double = {
     Facade.polygonLength(js.Array(polygon.map(p => p: js.Tuple2[Double, Double]): _*))
   }
 
