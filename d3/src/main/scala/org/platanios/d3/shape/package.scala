@@ -37,5 +37,6 @@ package object shape {
     val linkRadial: org.platanios.d3.shape.LinkRadial.type = org.platanios.d3.shape.LinkRadial
     val pie       : org.platanios.d3.shape.Pie.type        = org.platanios.d3.shape.Pie
     val polygon   : org.platanios.d3.shape.Polygon.type    = org.platanios.d3.shape.Polygon
+    val symbol    : org.platanios.d3.shape.Symbol.type     = org.platanios.d3.shape.Symbol
   }
 }
