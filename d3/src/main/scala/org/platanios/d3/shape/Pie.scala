@@ -220,22 +220,8 @@ class Pie[D] private[shape] (
 }
 
 object Pie {
-  def apply[D](
-      value: D3ValueAccessor[D, Double] = null,
-      startAngle: D3ArcAccessor[D, Double] = null,
-      endAngle: D3ArcAccessor[D, Double] = null,
-      padAngle: D3ArcAccessor[D, Double] = null
-  ): Pie[D] = {
-    val facade = Facade.pie[D]()
-    if (value != null)
-      facade.value(value)
-    if (startAngle != null)
-      facade.startAngle(startAngle)
-    if (endAngle != null)
-      facade.endAngle(endAngle)
-    if (padAngle != null)
-      facade.padAngle(padAngle)
-    new Pie[D](facade)
+  def apply[D](): Pie[D] = {
+    new Pie[D](Facade.pie[D]())
   }
 
   /** Represents each input datum's arc angles. This representation is designed to work with the arc generator's default

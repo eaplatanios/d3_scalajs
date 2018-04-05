@@ -53,12 +53,12 @@ abstract class Arc[D, A <: Arc[D, A]] protected (
     *
     * For example:
     * <p>
-    * <a href="http://bl.ocks.org/mbostock/9b5a2fd1ce1a146f27e4" rel="nofollow">
-    * <img alt="Circular Sector Centroids" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/centroid-circular-sector.png" width="250" height="250" style="max-width:100%;"/>
-    * </a>
-    * <a href="http://bl.ocks.org/mbostock/c274877f647361f3df7d" rel="nofollow">
-    * <img alt="Annular Sector Centroids" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/centroid-annular-sector.png" width="250" height="250" style="max-width:100%;"/>
-    * </a>
+    *   <a href="http://bl.ocks.org/mbostock/9b5a2fd1ce1a146f27e4" rel="nofollow">
+    *     <img alt="Circular Sector Centroids" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/centroid-circular-sector.png" width="250" height="250" style="max-width:100%;"/>
+    *   </a>
+    *   <a href="http://bl.ocks.org/mbostock/c274877f647361f3df7d" rel="nofollow">
+    *     <img alt="Annular Sector Centroids" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/centroid-annular-sector.png" width="250" height="250" style="max-width:100%;"/>
+    *   </a>
     * </p>
     *
     * @param  data Data propagated to the accessors.
@@ -112,12 +112,12 @@ abstract class Arc[D, A <: Arc[D, A]] protected (
     *
     * The corner circles are shown in this diagram:
     * <p>
-    * <a href="http://bl.ocks.org/mbostock/e5e3680f3079cf5c3437" rel="nofollow">
-    * <img alt="Rounded Circular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/rounded-circular-sector.png" width="250" height="250" style="max-width:100%;"/>
-    * </a>
-    * <a href="http://bl.ocks.org/mbostock/f41f50e06a6c04828b6e" rel="nofollow">
-    * <img alt="Rounded Annular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/rounded-annular-sector.png" width="250" height="250" style="max-width:100%;"/>
-    * </a>
+    *   <a href="http://bl.ocks.org/mbostock/e5e3680f3079cf5c3437" rel="nofollow">
+    *     <img alt="Rounded Circular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/rounded-circular-sector.png" width="250" height="250" style="max-width:100%;"/>
+    *   </a>
+    *   <a href="http://bl.ocks.org/mbostock/f41f50e06a6c04828b6e" rel="nofollow">
+    *     <img alt="Rounded Annular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/rounded-annular-sector.png" width="250" height="250" style="max-width:100%;"/>
+    *   </a>
     * </p>
     *
     * The corner radius may not be larger than `(outerRadius - innerRadius) / 2`. In addition, for arcs whose angular
@@ -179,12 +179,12 @@ abstract class Arc[D, A <: Arc[D, A]] protected (
     * a circular sector. For this reason, padding is typically only applied to annular sectors (i.e., when `innerRadius`
     * is positive), as shown in this diagram:
     * <p>
-    * <a href="http://bl.ocks.org/mbostock/f37b07b92633781a46f7" rel="nofollow">
-    * <img alt="Padded Circular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/padded-circular-sector.png" width="250" height="250" style="max-width:100%;"/>
-    * </a>
-    * <a href="http://bl.ocks.org/mbostock/99f0a6533f7c949cf8b8" rel="nofollow">
-    * <img alt="Padded Annular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/padded-annular-sector.png" width="250" height="250" style="max-width:100%;"/>
-    * </a>
+    *   <a href="http://bl.ocks.org/mbostock/f37b07b92633781a46f7" rel="nofollow">
+    *     <img alt="Padded Circular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/padded-circular-sector.png" width="250" height="250" style="max-width:100%;"/>
+    *   </a>
+    *   <a href="http://bl.ocks.org/mbostock/99f0a6533f7c949cf8b8" rel="nofollow">
+    *     <img alt="Padded Annular Sectors" src="https://raw.githubusercontent.com/d3/d3-shape/master/img/padded-annular-sector.png" width="250" height="250" style="max-width:100%;"/>
+    *   </a>
     * </p>
     *
     * The recommended minimum inner radius when using padding is `outerRadius * padAngle / sin(θ)`, where `θ` is the
@@ -225,8 +225,15 @@ abstract class Arc[D, A <: Arc[D, A]] protected (
   }
 
   /** Creates a new SVG arc generator based on this one. */
-  def toSVG(): SVGArc[D] = {
-    Arc(innerRadius(), outerRadius(), cornerRadius(), startAngle(), endAngle(), padAngle(), padRadius())
+  def svg: SVGArc[D] = {
+    Arc()
+        .innerRadius(innerRadius())
+        .outerRadius(outerRadius())
+        .cornerRadius(cornerRadius())
+        .startAngle(startAngle())
+        .endAngle(endAngle())
+        .padAngle(padAngle())
+        .padRadius(padRadius())
   }
 
   /** Creates a new canvas arc generator, using the provided canvas rendering context. If the context is not `null`,
@@ -235,7 +242,7 @@ abstract class Arc[D, A <: Arc[D, A]] protected (
     * @param  context Canvas rendering context to use.
     * @return New canvas line generator.
     */
-  def toCanvas(context: dom.CanvasRenderingContext2D): CanvasArc[D] = {
+  def canvas(context: dom.CanvasRenderingContext2D): CanvasArc[D] = {
     val facade = Arc.Facade.arc[D]()
         .innerRadius(innerRadius())
         .outerRadius(outerRadius())
@@ -270,28 +277,8 @@ class CanvasArc[D] private[shape] (
 }
 
 object Arc {
-  def apply[D](
-      innerRadius: D3ArcAccessor[D, Double],
-      outerRadius: D3ArcAccessor[D, Double],
-      cornerRadius: D3ArcAccessor[D, Double] = 0.0,
-      startAngle: D3ArcAccessor[D, Double] = null,
-      endAngle: D3ArcAccessor[D, Double] = null,
-      padAngle: D3ArcAccessor[D, Double] = null,
-      padRadius: D3ArcAccessor[D, Double] = null
-  ): SVGArc[D] = {
-    val facade = Facade.arc[D]()
-        .innerRadius(innerRadius)
-        .outerRadius(outerRadius)
-        .cornerRadius(cornerRadius)
-    if (startAngle != null)
-      facade.startAngle(startAngle)
-    if (endAngle != null)
-      facade.endAngle(endAngle)
-    if (padAngle != null)
-      facade.padAngle(padAngle)
-    if (padRadius != null)
-      facade.padRadius(padRadius)
-    new SVGArc[D](facade)
+  def apply[D](): SVGArc[D] = {
+    new SVGArc[D](Facade.arc[D]())
   }
 
   @JSImport("d3-shape", JSImport.Namespace)

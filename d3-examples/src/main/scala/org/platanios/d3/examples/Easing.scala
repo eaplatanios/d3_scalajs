@@ -73,9 +73,9 @@ object Easing {
 
     var ease = d3.ease.linear
 
-    val path = d3.line[Double](
-      x = (t: Double) => x(t),
-      y = (t: Double) => y(ease(t)))
+    val path = d3.line[Double]()
+        .x((t: Double) => x(t))
+        .y((t: Double) => y(ease(t)))
 
     val line = svg.append("g")
         .attr("class", "line")

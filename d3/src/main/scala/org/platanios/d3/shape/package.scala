@@ -15,8 +15,6 @@
 
 package org.platanios.d3
 
-import org.scalajs.dom
-
 import scala.scalajs.js
 
 /**
@@ -26,10 +24,12 @@ package object shape {
   // TODO: Make D contravariant.
   type D3ValueAccessor[D, +R] = js.Function3[D, Int, js.Array[D], R]
 
-  type D3ArcAccessor[D, +R] = js.Function1[D, R]
+  type D3ArcAccessor[-D, +R] = js.Function1[D, R]
 
   trait API {
     val arc       : org.platanios.d3.shape.Arc.type        = org.platanios.d3.shape.Arc
+    val area      : org.platanios.d3.shape.Area.type       = org.platanios.d3.shape.Area
+    val areaRadial: org.platanios.d3.shape.AreaRadial.type = org.platanios.d3.shape.AreaRadial
     val curve     : org.platanios.d3.shape.Curve.type      = org.platanios.d3.shape.Curve
     val line      : org.platanios.d3.shape.Line.type       = org.platanios.d3.shape.Line
     val lineRadial: org.platanios.d3.shape.LineRadial.type = org.platanios.d3.shape.LineRadial

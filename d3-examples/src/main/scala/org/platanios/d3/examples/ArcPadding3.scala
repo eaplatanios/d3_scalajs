@@ -41,10 +41,11 @@ object ArcPadding3 {
       "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
       "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf")
 
-    val arc = d3.arc[d3.pie.DatumArc[Int]](
-      innerRadius = radius - 70.0,
-      outerRadius = radius - 10.0,
-      padAngle = 0.03).toCanvas(context)
+    val arc = d3.arc[d3.pie.DatumArc[Int]]()
+        .innerRadius(radius - 70.0)
+        .outerRadius(radius - 10.0)
+        .padAngle(0.03)
+        .canvas(context)
     val pie = d3.pie[Int]()
     val arcs = pie(data)
 

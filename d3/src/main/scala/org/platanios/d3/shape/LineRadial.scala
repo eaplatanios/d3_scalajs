@@ -15,8 +15,6 @@
 
 package org.platanios.d3.shape
 
-import org.platanios.d3.shape.Implicits._
-
 import org.scalajs.dom
 
 import scala.scalajs.js
@@ -82,8 +80,12 @@ abstract class LineRadial[D, L <: LineRadial[D, L]] protected (private[d3] val f
   }
 
   /** Creates a new SVG line radial generator based on this one. */
-  def toSVG(): SVGLineRadial[D] = {
-    LineRadial(angle(), radius(), defined(), curve())
+  def svg: SVGLineRadial[D] = {
+    LineRadial()
+        .angle(angle())
+        .radius(radius())
+        .defined(defined())
+        .curve(curve())
   }
 
   /** Creates a new canvas line radial generator, using the provided canvas rendering context. If the context is not
@@ -92,7 +94,7 @@ abstract class LineRadial[D, L <: LineRadial[D, L]] protected (private[d3] val f
     * @param  context Canvas rendering context to use.
     * @return New canvas line radial generator.
     */
-  def toCanvas(context: dom.CanvasRenderingContext2D): CanvasLineRadial[D] = {
+  def canvas(context: dom.CanvasRenderingContext2D): CanvasLineRadial[D] = {
     val facade = LineRadial.Facade.lineRadial[D]()
         .angle(angle())
         .radius(radius())
@@ -124,42 +126,9 @@ class CanvasLineRadial[D] private[shape] (
 }
 
 object LineRadial {
-  /** Creates a new line radial generator.
-    *
-    * @param  angle   `angle` accessor to use.
-    * @param  radius  `radius` accessor to use.
-    * @param  defined `defined` accessor to use.
-    * @param  curve   Curve factory to use.
-    * @return Created line radial generator.
-    */
-  def apply[D](
-      angle: D3ValueAccessor[D, Double],
-      radius: D3ValueAccessor[D, Double],
-      defined: D3ValueAccessor[D, Boolean] = (_: D) => true,
-      curve: Curve.LineFactory = Curve.linear
-  ): SVGLineRadial[D] = {
-    val facade = Facade.lineRadial[D]()
-        .angle(angle)
-        .radius(radius)
-        .defined(defined)
-        .curve(curve)
-    new SVGLineRadial[D](facade)
-  }
-
-  /** Creates a new default line radial generator over pairs of `angle` and `radius` values.
-    *
-    * @param  defined `defined` accessor to use.
-    * @param  curve   Curve factory to use.
-    * @return Created line radial generator.
-    */
-  def default(
-      defined: D3ValueAccessor[js.Tuple2[Double, Double], Boolean] = (_: js.Tuple2[Double, Double]) => true,
-      curve: Curve.LineFactory = Curve.linear
-  ): SVGLineRadial[js.Tuple2[Double, Double]] = {
-    val facade = Facade.lineRadial[js.Tuple2[Double, Double]]()
-        .defined(defined)
-        .curve(curve)
-    new SVGLineRadial[js.Tuple2[Double, Double]](facade)
+  /** Creates a new line radial generator. */
+  def apply[D](): SVGLineRadial[D] = {
+    new SVGLineRadial[D](Facade.lineRadial[D]())
   }
 
   @JSImport("d3-shape", JSImport.Namespace)

@@ -15,8 +15,6 @@
 
 package org.platanios.d3.shape
 
-import org.platanios.d3.shape.Implicits._
-
 import org.scalajs.dom
 
 import scala.scalajs.js
@@ -50,8 +48,8 @@ abstract class Line[D, L <: Line[D, L]] protected (private[d3] val facade: Line.
     *     ...)
     *
     *   val line = d3.line(
-    *     x = (d: js.Dictionary[js.Object]) => d("date"),
-    *     y = (d: js.Dictionary[js.Object]) => d("value"))
+    *     x = (d: js.Dictionary[js.Object]) => x(d("date")),
+    *     y = (d: js.Dictionary[js.Object]) => y(d("value")))
     * }}}
     *
     * @param  x `x` accessor to use.
@@ -118,8 +116,12 @@ abstract class Line[D, L <: Line[D, L]] protected (private[d3] val facade: Line.
   }
 
   /** Creates a new SVG line generator based on this one. */
-  def toSVG(): SVGLine[D] = {
-    Line(x(), y(), defined(), curve())
+  def svg: SVGLine[D] = {
+    Line()
+        .x(x())
+        .y(y())
+        .defined(defined())
+        .curve(curve())
   }
 
   /** Creates a new canvas line generator, using the provided canvas rendering context. If the context is not `null`,
@@ -128,7 +130,7 @@ abstract class Line[D, L <: Line[D, L]] protected (private[d3] val facade: Line.
     * @param  context Canvas rendering context to use.
     * @return New canvas line generator.
     */
-  def toCanvas(context: dom.CanvasRenderingContext2D): CanvasLine[D] = {
+  def canvas(context: dom.CanvasRenderingContext2D): CanvasLine[D] = {
     val facade = Line.Facade.line[D]()
         .x(x())
         .y(y())
@@ -160,42 +162,9 @@ class CanvasLine[D] private[shape] (
 }
 
 object Line {
-  /** Creates a new line generator.
-    *
-    * @param  x       `x` accessor to use.
-    * @param  y       `y` accessor to use.
-    * @param  defined `defined` accessor to use.
-    * @param  curve   Curve factory to use.
-    * @return Created line generator.
-    */
-  def apply[D](
-      x: D3ValueAccessor[D, Double],
-      y: D3ValueAccessor[D, Double],
-      defined: D3ValueAccessor[D, Boolean] = (_: D) => true,
-      curve: Curve.LineFactory = Curve.linear
-  ): SVGLine[D] = {
-    val facade = Facade.line[D]()
-        .x(x)
-        .y(y)
-        .defined(defined)
-        .curve(curve)
-    new SVGLine[D](facade)
-  }
-
-  /** Creates a new default line generator over pairs of `x` and `y` values.
-    *
-    * @param  defined `defined` accessor to use.
-    * @param  curve   Curve factory to use.
-    * @return Created line generator.
-    */
-  def default(
-      defined: D3ValueAccessor[js.Tuple2[Double, Double], Boolean] = (_: js.Tuple2[Double, Double]) => true,
-      curve: Curve.LineFactory = Curve.linear
-  ): SVGLine[js.Tuple2[Double, Double]] = {
-    val facade = Facade.line[js.Tuple2[Double, Double]]()
-        .defined(defined)
-        .curve(curve)
-    new SVGLine[js.Tuple2[Double, Double]](facade)
+  /** Creates a new line generator. */
+  def apply[D](): SVGLine[D] = {
+    new SVGLine[D](Facade.line[D]())
   }
 
   @JSImport("d3-shape", JSImport.Namespace)
