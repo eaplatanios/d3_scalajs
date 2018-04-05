@@ -191,7 +191,7 @@ abstract class Area[D, A <: Area[D, A]] protected (private[d3] val facade: Area.
 
   /** Creates a new SVG area generator based on this one. */
   def svg: SVGArea[D] = {
-    Area()
+    Area[D]()
         .x0(x0())
         .x1(x1())
         .y0(y0())

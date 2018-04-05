@@ -33,6 +33,8 @@ package object shape {
     val curve     : org.platanios.d3.shape.Curve.type      = org.platanios.d3.shape.Curve
     val line      : org.platanios.d3.shape.Line.type       = org.platanios.d3.shape.Line
     val lineRadial: org.platanios.d3.shape.LineRadial.type = org.platanios.d3.shape.LineRadial
+    val link      : org.platanios.d3.shape.Link.type       = org.platanios.d3.shape.Link
+    val linkRadial: org.platanios.d3.shape.LinkRadial.type = org.platanios.d3.shape.LinkRadial
     val pie       : org.platanios.d3.shape.Pie.type        = org.platanios.d3.shape.Pie
     val polygon   : org.platanios.d3.shape.Polygon.type    = org.platanios.d3.shape.Polygon
   }

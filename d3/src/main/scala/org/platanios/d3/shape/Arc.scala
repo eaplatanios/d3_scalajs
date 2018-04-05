@@ -226,7 +226,7 @@ abstract class Arc[D, A <: Arc[D, A]] protected (
 
   /** Creates a new SVG arc generator based on this one. */
   def svg: SVGArc[D] = {
-    Arc()
+    Arc[D]()
         .innerRadius(innerRadius())
         .outerRadius(outerRadius())
         .cornerRadius(cornerRadius())

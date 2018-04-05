@@ -81,7 +81,7 @@ abstract class LineRadial[D, L <: LineRadial[D, L]] protected (private[d3] val f
 
   /** Creates a new SVG line radial generator based on this one. */
   def svg: SVGLineRadial[D] = {
-    LineRadial()
+    LineRadial[D]()
         .angle(angle())
         .radius(radius())
         .defined(defined())

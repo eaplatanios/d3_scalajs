@@ -117,7 +117,7 @@ abstract class Line[D, L <: Line[D, L]] protected (private[d3] val facade: Line.
 
   /** Creates a new SVG line generator based on this one. */
   def svg: SVGLine[D] = {
-    Line()
+    Line[D]()
         .x(x())
         .y(y())
         .defined(defined())

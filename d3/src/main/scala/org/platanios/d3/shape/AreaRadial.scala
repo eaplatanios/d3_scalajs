@@ -139,7 +139,7 @@ abstract class AreaRadial[D, A <: AreaRadial[D, A]] protected (private[d3] val f
 
   /** Creates a new SVG area radial generator based on this one. */
   def svg: SVGAreaRadial[D] = {
-    AreaRadial()
+    AreaRadial[D]()
         .startAngle(startAngle())
         .endAngle(endAngle())
         .innerRadius(innerRadius())
