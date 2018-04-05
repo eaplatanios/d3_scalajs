@@ -20,6 +20,9 @@ import org.scalajs.dom
 import scalajs.js
 import scala.scalajs.js.annotation.{JSBracketAccess, JSImport}
 
+/**
+  * @author Emmanouil Antonios Platanios
+  */
 package object d3 extends Implicits {
   /** Helper trait which covers argument types like NodeListOf[T] or HTMLCollectionOf[T]. */
   @js.native trait ArrayLike[T] extends js.Object {
@@ -84,7 +87,6 @@ package object d3 extends Implicits {
   implicit def d3toArray(d3: org.platanios.d3.d3.type): array.Array.type = array.Array
   implicit def d3toDrag(d3: org.platanios.d3.d3.type): drag.Drag.type = drag.Drag
   implicit def d3toD3Force(d3: org.platanios.d3.d3.type): D3Force.type = D3Force
-  implicit def d3toD3Shape(d3: org.platanios.d3.d3.type): D3Shape.type = D3Shape
   implicit def d3toD3QuadTree(d3: org.platanios.d3.d3.type): D3QuadTree.type = D3QuadTree
   //  implicit def d3toD3Zoom(d3: D3.type): D3Zoom.type = D3Zoom
 
@@ -136,7 +138,7 @@ package object d3 extends Implicits {
 
   //region API
 
-  object d3 {
+  object d3 extends shape.API {
     val version: String = d3Facade.version
 
     val axis       : org.platanios.d3.axis.Axis.type               = org.platanios.d3.axis.Axis
@@ -149,7 +151,6 @@ package object d3 extends Implicits {
     val interpolate: org.platanios.d3.interpolate.Interpolate.type = org.platanios.d3.interpolate.Interpolate
     val local      : org.platanios.d3.selection.Local.type         = org.platanios.d3.selection.Local
     val namespaces : org.platanios.d3.selection.Namespaces.type    = org.platanios.d3.selection.Namespaces
-    val polygon    : org.platanios.d3.shape.Polygon.type           = org.platanios.d3.shape.Polygon
     val random     : org.platanios.d3.random.Random.type           = org.platanios.d3.random.Random
     val select     : org.platanios.d3.selection.Selection.type     = org.platanios.d3.selection.Selection
     val time       : org.platanios.d3.time.Time.type               = org.platanios.d3.time.Time

@@ -19,7 +19,9 @@ import org.scalajs.dom
 
 import scala.scalajs.js
 
-private[d3] trait Implicits extends LowPriorityImplicits {
+private[d3] trait Implicits
+    extends LowPriorityImplicits
+        with shape.Implicits {
   implicit def nullD3Value(value: Null): D3Value = new NullD3Value(value)
   implicit def booleanD3Value(value: Boolean): D3Value = new BooleanD3Value(value)
   implicit def intD3Value(value: Int): D3Value = new IntD3Value(value)
@@ -36,7 +38,8 @@ private[d3] trait Implicits extends LowPriorityImplicits {
   implicit def d3JsThisFn2ToD3Fn[N <: dom.EventTarget, D, R](f: js.ThisFunction2[N, D, Index, R]): D3Function[N, D, R] = (n: N, d: D, i: Index, _: Group) => f(n, d, i)
 }
 
-private[d3] trait LowPriorityImplicits extends LowestPriorityImplicits {
+private[d3] trait LowPriorityImplicits
+    extends LowestPriorityImplicits {
   implicit def d3Fn0ToD3Fn[R](f: () => R): D3Function[dom.EventTarget, js.Any, R] = (_: dom.EventTarget, _: js.Any, _: Index, _: Group) => f()
   implicit def d3Fn1ToD3Fn[D, R](f: (D) => R): D3Function[dom.EventTarget, D, R] = (_: dom.EventTarget, d: D, _: Index, _: Group) => f(d)
   implicit def d3Fn2ToD3Fn[D, R](f: (D, Index) => R): D3Function[dom.EventTarget, D, R] = (_: dom.EventTarget, d: D, i: Index, _: Group) => f(d, i)

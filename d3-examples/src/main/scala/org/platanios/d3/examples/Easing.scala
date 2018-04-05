@@ -16,12 +16,11 @@
 package org.platanios.d3.examples
 
 import org.platanios.d3._
+
 import org.scalajs.dom
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.{JSExportAll, JSExportTopLevel}
-
-// TODO: Fix this when we support SVG lines.
 
 /** Example ported from [here](https://bl.ocks.org/mbostock/248bac3b8e354a9103c4).
   *
@@ -72,10 +71,16 @@ object Easing {
         .attr("font-weight", "bold")
         .text("ease(t) = ")
 
-//    val line = svg.append("g")
-//        .attr("class", "line")
-//        .append("path")
-//        .datum(d3.range(0, 1, 0.002).concat(js.Array(1)))
+    var ease = d3.ease.linear
+
+    val path = d3.line[Double](
+      x = (t: Double) => x(t),
+      y = (t: Double) => y(ease(t)))
+
+    val line = svg.append("g")
+        .attr("class", "line")
+        .append("path")
+        .datum[Seq[Double]](0.0 to(1.0, 0.002))
 
     val dot1 = svg.append("circle")
         .attr("r", 5)
@@ -83,8 +88,6 @@ object Easing {
     val dot2 = svg.append("circle")
         .attr("cx", width + 20)
         .attr("r", 5)
-
-    var ease = d3.ease.linear
 
     def changed(e: dom.html.Select): Unit = {
       ease = e.value match {
@@ -118,16 +121,10 @@ object Easing {
         case "elasticInOut" => d3.ease.elasticInOut
         case _ => d3.ease.linear
       }
-      //    var path = d3.line()
-      //        .x(function(t) { return x(t); })
-      //        .y(function(t) { return y(ease(t)); });
-      //
-      //    var ease;
-      // val path = d3.line()
-      // line.attr("d", path)
+      line.attr("d", (d: Seq[Double]) => path(d))
     }
 
-    val select = d3.select("#ease-type")
+    d3.select("#ease-type")
         .on("change", (e: dom.html.Select, _: js.Any) => changed(e))
         // .property("value", top.location.hash ? top.location.hash.slice(1) : "linear")
         .each((e: dom.html.Select, _: js.Any) => changed(e))
